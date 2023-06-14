@@ -80,8 +80,13 @@ public class UserProfileControllerService {
             }
         }
         for (Event event : eventRepository.findAll()) {
-            if (Objects.equals(event.getEventHost(), user.get().getUserName())) {
+            if (Objects.equals(event.getUserName(), user.get().getUserName())) {
                 currentUserPostHistories.add(new CurrentUserPostHistory(event.getId(), "Event", event.getEventTitle(), false, event.getDescription()));
+            }
+        }
+        for (org.rally.backend.servicesarm.model.response.Service event : serviceRepository.findAll()) {
+            if (Objects.equals(event.getName(), user.get().getUserName())) {
+                currentUserPostHistories.add(new CurrentUserPostHistory(event.getId(), "Service", event.getName(), false, event.getDescription()));
             }
         }
 
@@ -104,6 +109,7 @@ public class UserProfileControllerService {
         /** Isolating all messages from and to user **/
         List<UserEntity> allUsers = new ArrayList<>();
         List<DirectMessage> allMessagesRelatedToUser = new ArrayList<>();
+        List<ProfilePicture> allProfilePictures = new ArrayList<>();
 
         for (DirectMessage dm : directMessageRepository.findAll()) {
             if (dm.getReceivedByUserId().equals(id) || dm.getSentByUserId().equals(id)) {
@@ -122,7 +128,23 @@ public class UserProfileControllerService {
                 }
             }
         }
-        return new UserDmHistory(allUsers, allMessagesRelatedToUser);
+
+        for (UserEntity user : allUsers) {
+            if (profilePictureRepository.findByUserId(user.getUserName()).isPresent()) {
+                ProfilePicture pic = profilePictureRepository.findByUserId(user.getUserName()).get();
+
+                allProfilePictures.add(ProfilePicture.builder()
+                        .id(pic.getId())
+                        .userId(user.getUserName())
+                        .type(pic.getType())
+                        .image(ImageUtility.decompressImage(pic.getImage())).build());
+            }
+        }
+
+
+
+
+        return new UserDmHistory(allUsers, allMessagesRelatedToUser, allProfilePictures);
     }
 
 
@@ -152,7 +174,7 @@ public class UserProfileControllerService {
     public static List<Event> getUserEventPost(String userName) {
         List<Event> targetEventPost = new ArrayList<>();
         for (Event eventPosts: eventRepository.findAll()) {
-            if (Objects.equals(eventPosts.getEventHost(), userName)) {
+            if (Objects.equals(eventPosts.getUserName(), userName)) {
                 targetEventPost.add(eventPosts);
             }
         }
@@ -168,6 +190,17 @@ public class UserProfileControllerService {
             }
         }
         return targetForumPostReplies;
+    }
+
+    public static List<org.rally.backend.servicesarm.model.response.Service> getUserServicePost(String userName) {
+        List<org.rally.backend.servicesarm.model.response.Service> targetServicePost = new ArrayList<>();
+        for (org.rally.backend.servicesarm.model.response.Service service : serviceRepository.findAll()) {
+            if (Objects.equals(service.getName(), userName)) {
+                targetServicePost.add(service);
+            }
+
+        }
+        return targetServicePost;
     }
 
     /** Ease of use: Generates roles in DB (For project use, would set up different in real application) **/

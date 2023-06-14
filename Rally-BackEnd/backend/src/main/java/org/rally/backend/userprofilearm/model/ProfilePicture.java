@@ -17,7 +17,7 @@ public class ProfilePicture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
+    private String userId;
     private String type;
     @Column(columnDefinition = "MEDIUMBLOB NOT NULL")
     private byte[] image;

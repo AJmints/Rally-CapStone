@@ -6,9 +6,8 @@ import org.rally.backend.forumarm.models.ForumPosts;
 import org.rally.backend.forumarm.models.Replies;
 import org.rally.backend.forumarm.repository.ForumPostRepository;
 import org.rally.backend.forumarm.repository.RepliesRepository;
+import org.rally.backend.servicesarm.model.response.Service;
 import org.rally.backend.servicesarm.repository.ServiceRepository;
-import org.rally.backend.springsecurity.models.BadJWT;
-import org.rally.backend.springsecurity.repository.JWTBlockListRepository;
 import org.rally.backend.springsecurity.security.jwt.JWTGenerator;
 import org.rally.backend.userprofilearm.exception.MinimumCharacterException;
 import org.rally.backend.userprofilearm.model.*;
@@ -31,22 +30,21 @@ import java.util.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin
 @RequestMapping(value = "/user")
 public class UserProfileController {
 
-    private final UserRepository userRepository;
-    private final UserInformationRepository userInformationRepository;
-    private final RoleRepository roleRepository;
-    private final DirectMessageRepository directMessageRepository;
-    private final ProfilePictureRepository profilePictureRepository;
-    private final ForumPostRepository forumPostRepository;
-    private final RepliesRepository repliesRepository;
-    private final HiddenPostRepository hiddenPostRepository;
-    private final ServiceRepository serviceRepository;
-    private final EventRepository eventRepository;
-    private final JWTBlockListRepository jwtBlockListRepository;
-    private final JWTGenerator jwtGenerator;
+    UserRepository userRepository;
+    UserInformationRepository userInformationRepository;
+    RoleRepository roleRepository;
+    DirectMessageRepository directMessageRepository;
+    ProfilePictureRepository profilePictureRepository;
+    ForumPostRepository forumPostRepository;
+    RepliesRepository repliesRepository;
+    HiddenPostRepository hiddenPostRepository;
+    ServiceRepository serviceRepository;
+    EventRepository eventRepository;
+    private JWTGenerator jwtGenerator;
 
 
     @Autowired
@@ -55,8 +53,7 @@ public class UserProfileController {
                                  DirectMessageRepository directMessageRepository, ProfilePictureRepository profilePictureRepository,
                                  ForumPostRepository forumPostRepository, RepliesRepository repliesRepository,
                                  HiddenPostRepository hiddenPostRepository, ServiceRepository serviceRepository,
-                                 EventRepository eventRepository, JWTGenerator jwtGenerator,
-                                 JWTBlockListRepository jwtBlockListRepository) {
+                                 EventRepository eventRepository, JWTGenerator jwtGenerator) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userInformationRepository = userInformationRepository;
@@ -68,7 +65,6 @@ public class UserProfileController {
         this.serviceRepository = serviceRepository;
         this.eventRepository = eventRepository;
         this.jwtGenerator = jwtGenerator;
-        this.jwtBlockListRepository = jwtBlockListRepository;
     }
 
     /** GET REQUEST **/
@@ -78,11 +74,35 @@ public class UserProfileController {
 
     /** Returns a list of all users for search component **/
     @GetMapping("/search")
-    public List<UserEntity> displayAllUsers() {
-        return this.userRepository.findAll();
+    public SearchUserThumbNail displayAllUsers() {
+        SearchUserThumbNail thumbNail = new SearchUserThumbNail();
+        List<UserEntity> userNames = new ArrayList<>();
+        List<ProfilePicture> profilePictures = new ArrayList<>();
+
+        /** Send user Entities with their profile pictures to the front **/
+        for (UserEntity user : this.userRepository.findAll()) {
+            if (profilePictureRepository.findByUserId(user.getUserName()).isPresent()) {
+
+                userNames.add(user);
+                ProfilePicture pic = profilePictureRepository.findByUserId(user.getUserName()).get();
+
+                profilePictures.add(ProfilePicture.builder()
+                        .id(pic.getId())
+                        .userId(user.getUserName())
+                        .type(pic.getType())
+                        .image(ImageUtility.decompressImage(pic.getImage())).build());
+
+            } else {
+                userNames.add(user);
+            }
+        }
+
+        thumbNail.setProfilePics(profilePictures);
+        thumbNail.setUserNames(userNames);
+
+        return thumbNail;
     }
 
-    /** Returns information for a user being viewed **/
     @GetMapping("/getViewUserBundleInformation/{userName}")
     public ResponseEntity<?> getViewUserInformation(@PathVariable String userName) {
 
@@ -97,7 +117,7 @@ public class UserProfileController {
 
         /** Find viewing users information **/
         viewUserProfileBundle.setViewUser(userRepository.findByUserName(userName));
-        viewUserProfileBundle.setViewUserInformation(userInformationRepository.findByUserName(targetUser.getUserName()));
+        viewUserProfileBundle.setViewUserInformation(userInformationRepository.findByUserId(targetUser.getId()));
         viewUserProfileBundle.setViewUserDmHistory(UserProfileControllerService.activeUserDirectMessageHistory(targetUser.getId()));
         viewUserProfileBundle.setUpdatedPostHistoryViewUser(UserProfileControllerService.sortUpdatedPostHistoryViewUser(targetUser.getId()));
 
@@ -106,15 +126,12 @@ public class UserProfileController {
 
     }
 
-    /** Returns a list of all information for the logged in users account **/
     @GetMapping("/getMainUserBundleInformation/{userName}")
     public ResponseEntity<?> getMainUserBundle(@PathVariable String userName, @RequestHeader (name="authorization") String token) {
 
-        Optional<BadJWT> test = Optional.ofNullable(jwtBlockListRepository.findByBadToken(token.substring(7, token.length())));
 
-        if (!jwtGenerator.validateToken(token.substring(7, token.length())) || test.isPresent()) {
-            ResponseMessage responseMessage = new ResponseMessage("Bad Token");
-            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
+        if (!jwtGenerator.validateToken(token.substring(7, token.length()))) {
+            return new ResponseEntity<>(new ResponseMessage("Bad Token"), HttpStatus.OK);
         }
 
         Optional<UserEntity> areYouThere = Optional.ofNullable(userRepository.findByUserName(userName));
@@ -122,13 +139,11 @@ public class UserProfileController {
             return new ResponseEntity<>(new ResponseMessage("404"), HttpStatus.OK);
         }
 
-        /** Main user information and DM history **/
         UserEntity targetUser = userRepository.findByUserName(userName);
-        Optional<UserInformation> targetInformation = userInformationRepository.findByUserName(targetUser.getUserName());
+        Optional<UserInformation> targetInformation = userInformationRepository.findByUserId(targetUser.getId());
         UserDmHistory targetDirectMessages = UserProfileControllerService.activeUserDirectMessageHistory(targetUser.getId());
         UserPostHistory targetUserPostHistory = new UserPostHistory();
 
-        /** Profile details on Post history from other parts of the website **/
         List<HiddenPost> targetHiddenPost = UserProfileControllerService.getHiddenPostListForUserBundleMain(targetUser.getId());
         targetUserPostHistory.setViewUserHiddenPost(targetHiddenPost);
         List<ForumPosts> targetForumPost = UserProfileControllerService.getUserForumPost(targetUser.getId());
@@ -138,12 +153,15 @@ public class UserProfileController {
         /** Events need username, userid, or UserEntity inside model **/
         List<Event> targetEventPost = UserProfileControllerService.getUserEventPost(targetUser.getUserName());
         targetUserPostHistory.setViewUserEventPost(targetEventPost);
-        /** Services, Resources, RestaurantReview need username, userid, or UserEntity inside model **/
+
+        /** Retrieve Service Post and set in UserPostHistory Obj **/
+        List<Service> targetServicePost = UserProfileControllerService.getUserServicePost(targetUser.getUserName());
+        targetUserPostHistory.setViewUserServicePost(targetServicePost);
+        /** Resources, RestaurantReview need username, userid, or UserEntity inside model **/
 
         return new ResponseEntity<>(new UserBundle(targetUser, targetInformation, targetDirectMessages, targetUserPostHistory), HttpStatus.OK);
     }
 
-    /** Returns a list of post hidden relative to the user profile **/
     @GetMapping("/getHiddenPostList/{userId}")
     public List<HiddenPost> getHiddenPostListByUserId(@PathVariable int userId) {
         List<HiddenPost> hiddenPostList = new ArrayList<>();
@@ -155,7 +173,6 @@ public class UserProfileController {
         return hiddenPostList;
     }
 
-    /** Returns a filtered list of post that excludes post marked as hidden by the user when their page is viewed **/
     @GetMapping("/getUpdatedPostHistoryViewUser/{userId}")
     public ResponseEntity<?> getUpdatedPostHistoryViewUser(@PathVariable int userId) {
 
@@ -191,11 +208,10 @@ public class UserProfileController {
         return new ResponseEntity<>(currentPostSettings, HttpStatus.OK);
     }
 
-    /** Returns the users profile picture **/
-    @GetMapping(path = {"/userProfileImage/{userName}"})
-    public ResponseEntity<?> getImageDetails(@PathVariable("userName") String userName) throws IOException {
+    @GetMapping(path = {"/userProfileImage/{userId}"})
+    public ResponseEntity<?> getImageDetails(@PathVariable("userId") String userId) throws IOException {
 
-        final Optional<ProfilePicture> dbImage = profilePictureRepository.findByUserName(userName);
+        final Optional<ProfilePicture> dbImage = profilePictureRepository.findByUserId(userId);
         if (dbImage.isEmpty()) {
             ResponseMessage responseMessage = new ResponseMessage("User does not have a profile picture.");
             return new ResponseEntity<>(responseMessage, HttpStatus.OK);
@@ -203,7 +219,7 @@ public class UserProfileController {
 
         return new ResponseEntity<>(ProfilePicture.builder()
                 .id(dbImage.get().getId())
-                .userName(String.valueOf(UUID.randomUUID()))
+                .userId(dbImage.get().getUserId())
                 .type(dbImage.get().getType())
                 .image(ImageUtility.decompressImage(dbImage.get().getImage())).build(), HttpStatus.OK);
     }
@@ -213,36 +229,34 @@ public class UserProfileController {
     /** POST REQUEST **/
     /** POST REQUEST **/
 
-    /** Uploads the image to the profile picture table **/
     @PostMapping("/upload/image")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file)
             throws IOException {
 
-        if (profilePictureRepository.findByUserName(file.getOriginalFilename()).isPresent()) {
-            Optional<ProfilePicture> remove = profilePictureRepository.findByUserName(file.getOriginalFilename());
+        if (profilePictureRepository.findByUserId(file.getOriginalFilename()).isPresent()) {
+            Optional<ProfilePicture> remove = profilePictureRepository.findByUserId(file.getOriginalFilename());
             profilePictureRepository.deleteById(remove.get().getId());
         }
 
         profilePictureRepository.save(ProfilePicture.builder()
-                .userName(file.getOriginalFilename())
+                .userId(file.getOriginalFilename())
                 .type(file.getContentType())
                 .image(ImageUtility.compressImage(file.getBytes())).build());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseMessage("Image uploaded successfully: " + file.getOriginalFilename()));
     }
 
-    /** Update the hidden post on user profile **/
     @PostMapping("/hidePostList")
     public ResponseEntity<?> hiddenPosts(@RequestBody HidePostDTO hidePostDTO) {
 
         /** hide post based on their postType, sort through repos to find the right object to hide **/
 
-            for (HiddenPost post : hiddenPostRepository.findAll()) {
-                if (Objects.equals(hidePostDTO.getPostType(), post.getPostType()) && Objects.equals(post.getHidePostId(), hidePostDTO.getHidePostId()) && Objects.equals(hidePostDTO.getUserId(), post.getUserId())) {
-                    ResponseMessage responseMessage = new ResponseMessage("Post Already Hidden");
-                    return new ResponseEntity<>(responseMessage, HttpStatus.OK);
-                }
+        for (HiddenPost post : hiddenPostRepository.findAll()) {
+            if (Objects.equals(hidePostDTO.getPostType(), post.getPostType()) && Objects.equals(post.getHidePostId(), hidePostDTO.getHidePostId()) && Objects.equals(hidePostDTO.getUserId(), post.getUserId())) {
+                ResponseMessage responseMessage = new ResponseMessage("Post Already Hidden");
+                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
             }
+        }
 
         HiddenPost hiddenPost = new HiddenPost(hidePostDTO.getPostType(), hidePostDTO.getHidePostId(), hidePostDTO.getUserId());
         hiddenPostRepository.save(hiddenPost);
@@ -250,7 +264,6 @@ public class UserProfileController {
         return new ResponseEntity<>(hiddenPostRepository.findAll(), HttpStatus.OK);
     }
 
-    /** Marks a hidden post as no longer hidden by the main user **/
     @PostMapping("/unHidePost")
     public ResponseEntity<?> unHidePostFromProfile(@RequestBody HidePostDTO hidePostDTO) {
 
@@ -265,15 +278,14 @@ public class UserProfileController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /** Saves a direct message to the database **/
     @PostMapping("/sendDirectMessage")
     public ResponseEntity<?> updateUserInformation(@RequestBody DirectMessageDTO directMessageDTO) {
 
         DirectMessage messageSent = new DirectMessage(directMessageDTO.getReceivedByUserId(),
-                                                      directMessageDTO.getReceivedByUserName(),
-                                                      directMessageDTO.getSentByUserId(),
-                                                      directMessageDTO.getSentByUserName(),
-                                                      directMessageDTO.getMessageContent());
+                directMessageDTO.getReceivedByUserName(),
+                directMessageDTO.getSentByUserId(),
+                directMessageDTO.getSentByUserName(),
+                directMessageDTO.getMessageContent());
 
         if(messageSent.getMessageContent().toCharArray().length < 3) {
             throw new MinimumCharacterException();
@@ -295,11 +307,10 @@ public class UserProfileController {
     /** PUT Request **/
 
 
-    /** Testing put request: Updates the user information that is displayed on the user profile **/
-    @PutMapping("/update-user-information/{userName}")
-    public ResponseEntity<?> updateUserInformation(@PathVariable String userName, @RequestBody UserInfoDTO userInfoDTO) {
+    @PutMapping("/update-user-information/{userId}")
+    public ResponseEntity<?> updateUserInformation(@PathVariable int userId, @RequestBody UserInfoDTO userInfoDTO) {
 
-        Optional<UserInformation> userInfo = userInformationRepository.findByUserName(userName);
+        Optional<UserInformation> userInfo = userInformationRepository.findByUserId(userId);
 
         userInfo.get().setFirstName(userInfoDTO.getFirstName());
         userInfo.get().setLastName(userInfoDTO.getLastName());

@@ -31,7 +31,8 @@ public class DirectMessage {
         this.receivedByUserName = receivedByUserName;
         this.sentByUserId = sentByUserId;
         this.sentByUserName = sentByUserName;
-        this.messageContent = Base64.getEncoder().encodeToString(messageContent.getBytes(StandardCharsets.UTF_8));
+        this.messageContent = messageContent;
+//        this.messageContent = Base64.getEncoder().encodeToString(messageContent.getBytes(StandardCharsets.UTF_8));
     }
 
 
@@ -76,8 +77,10 @@ public class DirectMessage {
         this.messageContent = messageContent;
     }
 
-    public String getMessageContent() {
-        byte[] decodedBytes = Base64.getDecoder().decode(messageContent);
-        return new String(decodedBytes);
-    }
+    public String getMessageContent() { return this.messageContent; }
+
+//    public String getMessageContent() {
+//        byte[] decodedBytes = Base64.getDecoder().decode(messageContent);
+//        return new String(decodedBytes);
+//    }
 }

@@ -27,6 +27,7 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
   dmList: DirectMessage[];
   conversation: DirectMessage[];
   commentBox: any;
+  sendingMessage: boolean = false;
 
   /* User Profile Pic */
   dbImage: any;
@@ -44,6 +45,7 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
   dmCharacters = true;
   userReal = true;
   filterActive = false;
+  loading: boolean = false;
 
   @ViewChild('dmBottomOfScroll') private myScrollContainer: ElementRef;
 
@@ -59,7 +61,7 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
     if (this.authorize.isloggedIn() !== true) {
       this.authorize.logOut();
     }
-
+    this.loading = true;
     /* Pulling userName and userId from  */
     this.activatedRoute.paramMap.subscribe(params => {
     this.viewUserName = params.get('userName');
@@ -86,6 +88,7 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
       this.dmList = data.viewUserDmHistory.directMessageList;
       this.displayConversation(this.userEntityInformation.viewUser);
       this.scrollToBottom;
+      this.loading = false;
     },  err => {
       /* temporary error handling / want to build better handling approach */
       if (err.status === 500 || err.status === 400) {
@@ -148,6 +151,7 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
   viewingUserSendDM(dmMessageDetails: NgForm) {
     this.dmCharacters = true;
     this.tooManyChar = false;
+    this.sendingMessage = true;
 
     let sendDirectMessage: DirectMessageDTO = {
       receivedByUserId: this.userEntityInformation.viewUser.id,
@@ -166,10 +170,12 @@ export class ViewUserProfileComponent implements OnInit, AfterViewChecked {
       return
     }
 
+    this.commentBox = '';
+
     /* Posts the dm if it doens't trigger any errors */
     this.viewUser.postDirectMessage(sendDirectMessage).subscribe((response: DirectMessage[]) => {
+      this.sendingMessage = false;
       this.dmList = response;
-      this.commentBox = '';
       this.displayConversation(this.userEntityInformation.viewUser);
     });
   }

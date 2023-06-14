@@ -6,10 +6,8 @@ import {
   HttpInterceptor, 
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { AuthorizeService } from '../security-service/authorize.service';
 import { Observable } from 'rxjs';
-import { StorageService } from '../security-service/storage-service.service';
-import { CookieOptions, CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class JwtHandlerInterceptor implements HttpInterceptor {

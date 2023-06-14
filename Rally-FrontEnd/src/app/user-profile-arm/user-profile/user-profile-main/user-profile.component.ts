@@ -22,6 +22,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
+
+  /* Host Url */
+  private hostUrl = 'http://localhost:8080';
   
   /* logged in user information */
   userEntity: UserEntity;
@@ -31,6 +34,7 @@ export class UserProfileComponent implements OnInit {
   /* Direct Message variables */
   respondToDm: UserEntity;
   userEntityDmList: UserEntity[];
+  userProfilePics: any[] = [];
   allDmHistory: DirectMessage[];
   conversation: DirectMessage[] = [];
   commentBox: any;
@@ -42,8 +46,10 @@ export class UserProfileComponent implements OnInit {
   forumPost: any[];
   forumReplies: any[];
   eventPost: Event[];
+  servicePost: any[];
   
   /* HTML booleans */
+  logInStatus: boolean = true;
   notHidden: boolean = true;
   noError: boolean = true;
   tooManyChar: boolean = false;
@@ -52,6 +58,8 @@ export class UserProfileComponent implements OnInit {
   changeProfilePic: boolean = true;
   filterActive: boolean = false;
   uploadErrorMsg: any[];
+  loading: boolean = false;
+  sendingMessage:boolean = false;
 
   /* HTML variables */
   @ViewChild('dmBottomOfScroll') private scrollMe: ElementRef;
@@ -75,11 +83,11 @@ export class UserProfileComponent implements OnInit {
   ngOnInit(): void {
     /* Checks if user is logged in */
     if (this.authorize.isloggedIn() === true) {
+      this.loading = true;
       
       /* Get all information relevent to user */
-      this.activeUserService.getMainUserBundleByUserName(this.storageService.getUserName())
-      .subscribe((data: any) => {
-        
+      this.activeUserService.getMainUserBundleByUserName(this.storageService.getUserName()).subscribe((data: any) => {
+       
         this.userEntity = data.viewUser;
         this.userInformation = data.viewUserInformation;
         this.allDmHistory = data.viewUserDmHistory.directMessageList;
@@ -87,7 +95,8 @@ export class UserProfileComponent implements OnInit {
         this.hiddenPost = data.viewUserPostHistory.viewUserHiddenPost;
         this.forumPost = data.viewUserPostHistory.viewUserForumPost;
         this.forumReplies = data.viewUserPostHistory.viewUserForumReplies;
-        this.eventPost = data.viewUserPostHistory.viewUserEventPost;
+        this.eventPost = data.viewUserPostHistory.viewUserEventPost;      
+        this.servicePost = data.viewUserPostHistory.viewUserServicePost;
         this.model = new NgUserInformation(this.userInformation.firstName,
                                            this.userInformation.lastName,
                                            this.userInformation.neighborhood,
@@ -96,10 +105,37 @@ export class UserProfileComponent implements OnInit {
         /* Remove active user from dm list */
         this.userEntityDmList = this.userEntityDmList.filter((user: UserEntity) => user.userName !== this.storageService.getUserName());
 
+        let dataProfilePics = data.viewUserDmHistory.profilePictures;
+        
+        /* Make a list of objects with user name and user image for thumbnail display*/
+        let makeThumbNails = this.userEntityDmList;
+        for (let pic of dataProfilePics) {
+          for (let user of makeThumbNails) {
+            if (user.userName === pic.userId) {
+              let picAndName = {
+                userName: user.userName,
+                image: 'data:image/jpeg;base64,' + pic.image
+              }
+              this.userProfilePics.push(picAndName);
+              makeThumbNails = makeThumbNails.filter((user: UserEntity) => user.userName !== picAndName.userName)
+            }
+          }
+        }
+        /* Add remaining users to the list who don't have images */
+        for (let user of makeThumbNails) {
+          let picAndName = {
+            userName: user.userName,
+            image: null
+          }
+          this.userProfilePics.push(picAndName);
+        }
+
+
         /* Get all user post organized to display */
-        this.allPost = this.activeUserService.oneBigList(this.forumPost, this.forumReplies, this.eventPost);
+        this.allPost = this.activeUserService.oneBigList(this.forumPost, this.forumReplies, this.eventPost, this.servicePost);
         this.allPostFilter = this.allPost;
         this.updateHiddenPost();
+        this.loading = false;
       },  err => {
         /* temporary error handling / want to build better handling approach */
         if (err.status === 500 || err.status === 400) {
@@ -109,7 +145,7 @@ export class UserProfileComponent implements OnInit {
 
       /* Get user Profile pic */
       /* bundle in userbundle or change to user userName */
-      this.http.get('http://localhost:8080/user/userProfileImage/' + this.storageService.getUserName()).subscribe((response: any) => {
+      this.http.get( this.hostUrl + '/user/userProfileImage/' + this.storageService.getUserName()).subscribe((response: any) => {
         if (response.message) {
           return;
         } else {
@@ -182,7 +218,7 @@ export class UserProfileComponent implements OnInit {
       userId: Number(this.userEntity.id)
     }
 
-    this.http.post('http://localhost:8080/user/hidePostList', hidePostDTO).subscribe((response: any) => {
+    this.http.post( this.hostUrl + '/user/hidePostList', hidePostDTO).subscribe((response: any) => {
       /* Temp solution to refresh page without location.reload() */
       this.router.navigate(['/register'])
     })
@@ -197,9 +233,7 @@ export class UserProfileComponent implements OnInit {
       userId: Number(localStorage.getItem("id"))
     }
 
-    console.log(hidePostDTO)
-
-    this.http.post('http://localhost:8080/user/unHidePost', hidePostDTO).subscribe((response) => {
+    this.http.post( this.hostUrl + '/user/unHidePost', hidePostDTO).subscribe((response) => {
       /* Temp solution to refresh page without location.reload() */
       this.router.navigate(['/register'])
     })
@@ -207,6 +241,7 @@ export class UserProfileComponent implements OnInit {
 
   /* Select file to be uploaded */
   public onImageUpload(event) {
+    this.uploadErrorMsg= []
     if (event.target.files[0].size > 1024000) {   
       this.uploadErrorMsg = ["File is too large, please select a smaller image", true];
       this.uploadedImage = null;
@@ -218,16 +253,16 @@ export class UserProfileComponent implements OnInit {
 
   /* Upload the image to the database */
   imageUploadAction() {
-    if (this.uploadedImage === null) {
-      console.log("Nope");
+    this.uploadErrorMsg = []
+    if (this.uploadedImage === null || this.uploadedImage === undefined) {
+      this.uploadErrorMsg = ["Please choose a valid image to upload.", true]
       return;
     }
 
     const imageFormData = new FormData();
     imageFormData.append('image', this.uploadedImage, this.storageService.getUserName());
 
-    this.http.post('http://localhost:8080/user/upload/image', imageFormData, {observe: 'response'}).subscribe((response: any) => {
-      console.log(response);
+    this.http.post( this.hostUrl + '/user/upload/image', imageFormData, {observe: 'response'}).subscribe((response: any) => {
       if (response.status === 200) {
         this.postResponse = response;
       } else { 
@@ -238,6 +273,10 @@ export class UserProfileComponent implements OnInit {
     })
   }  
 
+  cancelPhotoUpload() {
+    this.changeProfilePic = true;
+    this.uploadedImage = null;
+  }
 
 
   /* Display conversation with user selected */
@@ -283,6 +322,7 @@ export class UserProfileComponent implements OnInit {
     /*reset error message on user messages if errors occured */
     this.noError = true;
     this.tooManyChar = false;
+    this.sendingMessage = true;
 
     let sendDirectMessage: DirectMessageDTO = {
       receivedByUserId: this.respondToDm.id,
@@ -301,10 +341,12 @@ export class UserProfileComponent implements OnInit {
       return
     }
 
+    this.commentBox = '';
+
     /* Post message to backend if message is valid then refresh the conversation to reflect message sent */
     this.viewUser.postDirectMessage(sendDirectMessage).subscribe((response: DirectMessage[]) => {
-      this.allDmHistory = response;
-      this.commentBox = '';
+      this.sendingMessage = false;
+      this.allDmHistory = response;  
       this.refreshConversation(this.respondToDm.userName)
     });   
   } 
@@ -318,7 +360,7 @@ export class UserProfileComponent implements OnInit {
       city: userDetails.value.city,
       state: userDetails.value.state
     }
-    this.http.put<any>('http://localhost:8080/user/update-user-information/' + this.storageService.getUserName(), userInfo).subscribe((response: UserInformation) => {
+    this.http.put<any>( this.hostUrl + '/user/update-user-information/' + this.userEntity.id, userInfo).subscribe((response: UserInformation) => {
         this.userInformation = response
         this.changeInfo=true;
         return;

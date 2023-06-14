@@ -4,8 +4,6 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import org.rally.backend.springsecurity.models.BadJWT;
-import org.rally.backend.springsecurity.repository.JWTBlockListRepository;
 import org.rally.backend.springsecurity.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -22,8 +20,6 @@ public class JWTGenerator {
 
     /** JWT Generator class **/
 
-    @Autowired
-    private JWTBlockListRepository jwtBlockListRepository;
 
     public String generateToken(Authentication authentication) {
         String userName = authentication.getName();
@@ -57,20 +53,5 @@ public class JWTGenerator {
         } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException ex) {
             throw new AuthenticationCredentialsNotFoundException(ex.getMessage());
         }
-    }
-
-    /** Sets a JWT token in a block list, so it can't be used again **/
-    /** TODO - Need to write a method to delete expired tokens from blocklist **/
-    public void invalidateToken(String token) {
-        BadJWT setBadToken = new BadJWT();
-        setBadToken.setBadToken(token);
-
-        Optional<BadJWT> ifPresent = Optional.ofNullable(jwtBlockListRepository.findByBadToken(token));
-        if (ifPresent.isEmpty()) {
-            jwtBlockListRepository.save(setBadToken);
-        } else {
-            System.out.println("Quack");
-        }
-
     }
 }

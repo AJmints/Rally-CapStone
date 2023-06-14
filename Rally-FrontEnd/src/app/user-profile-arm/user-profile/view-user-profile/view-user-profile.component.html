@@ -1,170 +1,187 @@
+<header>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+            <div class="container">
+            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="container">
+                    <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                    <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                    </ul>
+                </div>             
+                <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+            </div>
+            </div>
+        </nav>
+    </div>
+</header>
+
+
 <!-- In the event the user page does not get rerouted -->
-<div *ngIf="userReal; else fourOFour"></div>
-<ng-template #fourOFour>
-<h1 style="color: crimson;">404 USER NOT FOUND</h1>
-</ng-template>
-<!-- Logout and Search nav bar -->
-    <div style="text-align: right;">
-        <button style="background-color: #85CDE3;"><a routerLink="/search" routerLinkActive="active">Search</a></button>
-        <button style="background-color: #85CDE3;" (click)="logOut()">Log Out</button>
-    </div>
-<br>
+<body>
+    <div class="container">
+        <div class="row">
+            <div *ngIf="userReal; else fourOFour"></div>
+            <ng-template #fourOFour>
+            <h1 style="color: #C03E24;">404 USER NOT FOUND</h1>
+            </ng-template>
 
-
-<!-- First Row in User Profile -->
-<!-- First Row in User Profile -->
-<!-- First Row in User Profile -->
-<div class="row">
-
-<!-- User Profile Picture -->
-<!-- User Profile Picture -->
-<!-- User Profile Picture -->
-<div class="col-3">
-<div class="card"style="background-color: #0EBB9A;">
-    <h4>Viewing {{ this?.viewUserName }}'s Profile</h4>
-    <div class="card" style="align-content: center;" *ngIf="dbImage; else default">               
-        <img [src]="dbImage" width="100%" height="auto">
-    </div>
-    <ng-template #default>
-        <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
-    </ng-template>
-</div> 
-</div>
-
-
-<!-- User Direct Messaging service -->
-<!-- User Direct Messaging service -->
-<!-- User Direct Messaging service -->
-<div class="col-9">
-    <div class="card" style="background-color: #0EBB9A;">
-        <h4>Direct Messaging: <br>{{ viewUserName }}</h4>
-        <div class="card">
-            <div #dmBottomOfScroll class="scroll">
-            <!-- Display the conversation between user and viewed profile -->
-            <table style="width: 100%;" *ngFor="let dm of conversation">
-                <br>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-                <td class="card" style="background-color: #F9A605">
-                    <tr style="background-color: #F9A605">Sent: <br>{{dm.sentByUserName}}</tr> 
-                </td>
-                <td>
-                    <tr class="thought">Message: <br>{{ dm.messageContent }}</tr> 
-                </td>
-                <td class="card" style="background-color: #F9A605">
-                    <tr style="background-color: #F9A605">Recieved: <br>{{ dm.receivedByUserName}}</tr>
-                </td>
-                <br><br>
-            </table>
-            <!-- Respond to message between user and viewed profile -->
-            <form #dmMessageDetails="ngForm" (ngSubmit)="viewingUserSendDM(dmMessageDetails)">
-                <div class="card" style="align-items: center; background-color: rgb(126, 161, 154);">
-                    <h3>Respond: </h3>
-                <textarea rows="3" cols="40" type="text" name="messageContent" [(ngModel)]="commentBox"></textarea> 
-                <br>
-                <div *ngIf="dmCharacters; else lengthError"></div>
-                <div *ngIf="!tooManyChar; else tooLong"></div>
-                <input style="background-color: #85CDE3;" type="submit" value="Send Message">   
-                <ng-template #tooLong>
-                    <h6 style="color: rgb(165, 35, 61);">You have exceeded 2500 characters.</h6>
-                </ng-template> 
-                <ng-template #lengthError>
-                    <h6 style="color:crimson;">Minimum of 3 characters required.</h6>
+            <div style="margin-top: 140px;"> 
+                <div *ngIf="!loading; else pleaseWait">
+                    <h2 style="font-family: Open Sans, sans-serif; font-size: 60px; font-weight: 700; margin-bottom: -60px;">Viewing: {{ this?.viewUserName }}</h2>
+                    <button  class="myButton" ><a routerLink="/search" routerLinkActive="active">SEARCH PROFILES</a></button>
+                </div>
+                <ng-template #pleaseWait>
+                    <h2 style="font-family: Open Sans, sans-serif; font-size: 60px; font-weight: 700; margin-bottom: -60px;">Loading....</h2>
                 </ng-template>
-                </div>
-            </form>
             </div>
         </div>
-    </div>
-<!-- End of First row in User Profile -->
-</div>
+        <br><br><br><br><br>
 
-
-<!-- Second Row in User Profile -->
-<!-- Second Row in User Profile -->
-<!-- Second Row in User Profile -->
-<div class="row">
-
-
-<!-- User Information -->
-<!-- User Information -->
-<!-- User Information -->
-<div class="col-3">
-    <div class="card" style="background-color: #0EBB9A;">
-        <h2>UserDetails</h2>
-        <div class="card">
-            <br> 
-            <label>First Name: <h4>{{ userEntityInformation?.viewUserInformation?.firstName }}</h4></label>
-            <br>
-            <label>Last Name: <h4>{{ userEntityInformation?.viewUserInformation?.lastName }}</h4></label>
-            <br>
-            <label>Neighborhood: <h4>{{ userEntityInformation?.viewUserInformation?.neighborhood }}</h4></label>
-            <br>
-            <label>City: <h4>{{ userEntityInformation?.viewUserInformation?.city }}</h4></label>
-            <br>       
-            <label>State: <h4>{{ userEntityInformation?.viewUserInformation?.state }}</h4></label>                     
-        </div>
-    </div>
-</div>
-
-
-<!-- User Post History Section -->
-<!-- User Post History Section -->
-<!-- User Post History Section -->
-<div class="col-6">
-    <div class="card" style="background-color: #0EBB9A;">
-        <h2>Post History</h2>
-        <div class="card">
-        <div class="scroll-posthistory">
-            <div *ngIf="this?.allPost.length === 0"><h3>User Does not have any post history</h3></div>
-            <!-- Filter to display posts of a specific type -->
-            <div>
-                <label >Show Forum Post: <input type="checkbox" name="ForumPost" (change)="userPostHistoryFilter($event)"></label>
-                <label >Show Event Post: <input type="checkbox" name="Event" (change)="userPostHistoryFilter($event)" ></label>
-            </div>
-            <!-- Display all user posts that are not hidden -->
-            <ul *ngFor="let post of allPost">
-                <!-- If post is not marked hidden, display... -->
-                <div *ngIf="post.hidden === false">
-                <!-- Display ForumPosts -->
-                <div *ngIf="post.type === 'ForumPost'">
-                <div class="card" style="background-color: #F9A605">
-                    <h6>{{ post.type }}</h6>
-                <div class="card" style="background-color: #ecdfc3;">                        
-                    <h3><a routerLink='/forum/post/{{post.id}}' routerLinkActive="active">{{ post.title }}</a></h3>
-                    <h6>{{ post.description }}</h6>
-                </div>
-                </div> 
-                </div>
-                <!-- Display Event posts -->
-                <div *ngIf="post.type === 'Event'">
-                    <div class="card" style="background-color: #F9A605">
-                    <h6>{{ post.type }}</h6>
-                <div class="card" style="background-color: #ecdfc3;">                        
-                    <h3>{{ post.title }}</h3>
-                    <h6>{{ post.description }}</h6>
-                </div>
-                </div> 
+        <div class="row">
+            <div class="col-3">
+                <br>
+                <br>
+                <div class="card">
+                    <div class="card" style="align-content: center;" *ngIf="dbImage; else default">               
+                        <img [src]="dbImage" width="100%" height="auto">
+                    </div>
+                    <!-- Default profile picture if no picture has been uploaded -->
+                    <ng-template #default>
+                        <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
+                    </ng-template>
+                    <br>
+                    <div>
+                        <br> 
+                        <label>first name<br><h4>{{ userEntityInformation?.viewUserInformation?.firstName }}</h4></label><br>
+                        <label>last name<br><h4>{{ userEntityInformation?.viewUserInformation?.lastName }}</h4></label><br>
+                        <label>neigborhood<br><h4>{{ userEntityInformation?.viewUserInformation?.neighborhood }}</h4></label><br>
+                        <label>city<br><h4>{{ userEntityInformation?.viewUserInformation?.city }}</h4></label><br>
+                        <label>state<br><h4>{{ userEntityInformation?.viewUserInformation?.state }}</h4></label><br> 
+                        <br>
+                    </div>  
                 </div>
             </div>
-            </ul>
-        </div>
+
+            <div class="col-6">
+                <h2>Messages</h2>
+                <div class="card">
+                    <h4 style="margin-left: 10px; margin-bottom: 3px; margin-top: 10px; font-size: 20px; padding: 15px; text-align: center; font-weight: bolder;"> </h4> 
+                    <div class="card">
+                        <div #dmBottomOfScroll class="scroll">
+                            <div>
+                             <!-- These 2 notes below might be safe for deletion -->
+                            <!-- <ng-template #showConversations> -->
+                            <!-- <div class="scroll" #scrollMe [scrollTop]="scrollMe.scrollHeight"> -->
+
+                            <!-- Display the conversation between user and viewed profile -->
+                                    <table style="width: 100%;" *ngFor="let dm of conversation">
+                                        <br><td>
+                                        <div >
+                                            <tr *ngIf="dm.sentByUserName === this.viewUserName" class="thought" style="background-color: #ffffff; border: 1px solid #0EBB9A; color: #0EBB9A; float: left;">{{ dm.messageContent }}</tr>
+                                            <tr *ngIf="dm.receivedByUserName === this.viewUserName" class="thought" style="background-color: #F9A605; color: #ffffff; float: right;">{{ dm.messageContent }}</tr>
+                                        </div>  
+                                        </td><br>
+                                    </table>
+
+                                    <form #dmMessageDetails="ngForm" (ngSubmit)="viewingUserSendDM(dmMessageDetails)">
+                                        <div>
+                                            <ng-template #lengthError>
+                                                <h6 style="color: #C03E24;">Minimum of 3 characters required.</h6>
+                                            </ng-template>
+                                            <br>
+                                            <div *ngIf="sendingMessage">Sending.....</div>
+                                            <textarea class="form-control" placeholder="RALLY message:" rows="2" cols="30" name="messageContent" minlength="10" [(ngModel)]="commentBox"></textarea>
+                                            <div *ngIf="dmCharacters; else lengthError">
+                                                <input class="btn btn-outline-info btn-xm" style="margin-top: 5px;  float: right; width: 100%;" type="submit" value="send">   
+                                                <br>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            <!-- </ng-template> -->
+                        </div>
+                    </div>
+                </div>
+            
+                <br>
+                <div>
+                    <h2>Favorites</h2>
+                <div class="card">
+                    <div class="scroll-favorites">
+            
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-3">
+                <h2>History</h2>
+                <div class="card">
+ 
+                    <div class="scroll-posthistory">
+                        <div *ngIf="this?.allPost.length === 0"><h3 style="text-align: center; margin-top: 30px;">No history found at this time.</h3></div>
+       
+                        <br>
+                            <div>
+                                <label class="form-check-label" style="font-size: 15px;">posts <input class="form-check-input" type="checkbox" name="ForumPost" (change)="userPostHistoryFilter($event)"></label>
+                                <label class="form-check-label" style="font-size: 15px;">events <input class="form-check-input" style="border-color: #0EBB9A;" type="checkbox" name="Event" (change)="userPostHistoryFilter($event)" ></label>
+                                <label class="form-check-label" style="font-size: 15px;">services <input class="form-check-input" style="border-color: #F9A605;" type="checkbox" name="Service" (change)="userPostHistoryFilter($event)"></label>
+                            </div>
+                        <br>
+                        <!-- Display all posts of all types that user has -->
+                        <ul *ngFor="let post of allPost" style="padding: 0px; margin: 5px;">
+
+                            <!-- If post is not marked hidden, display... -->
+                            <div *ngIf="post.hidden === false">
+                                <div class="card">
+                                    <!-- Display ForumPost objects -->
+                                    <div *ngIf="post.type === 'ForumPost'">
+                                        <div class="card-body">
+                                            <div class="card" style="background-color: #f9a8054f"><h6>{{ post.type }}</h6></div>
+                                        <h1><a routerLink='/forum/post/{{post.id}}' routerLinkActive="active" id="link">{{ post.title }}</a></h1>
+                                        <h4 style="font-size: 15px; font-weight: normal;">{{ post.description }}</h4>
+                                        <!-- <div style="text-align: left;"><button class="btn btn-outline-info btn-xm" type="button" (click)="hidePost(post)" >hide</button></div> -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Display Event objects -->
+                                    <div *ngIf="post.type === 'Event'">
+                                        <div class="card-body">
+                                            <div class="card" style="background-color: #f9a8054f"><h6>{{ post.type }}</h6></div>
+                                            <h1><a style="color: #0EBB9A" routerLink='/event/{{post.id}}' routerLinkActive="active" id="link">{{ post.title }}</a></h1>
+                                        <h4 style="font-size: 15px; font-weight: normal;">{{ post.description }}</h4>
+                                        <!-- <div style="text-align: left;"><button class="btn btn-outline-info btn-xm" type="button" (click)="hidePost(post)" >Hide this Post</button></div> -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Display Service objects -->
+                                    <div *ngIf="post.type === 'Service'">
+                                        <div class="card-body">
+                                            <div class="card" style="background-color: #f9a8054f"><h6>{{ post.type }}</h6></div>
+                                        <h1><a style="color: #F9A605;">{{ post.title }}</a></h1>
+                                        <h4 style="font-size: 15px; font-weight: normal;">{{ post.description }}</h4>
+                                        <!-- <div style="text-align: left;"><button class="btn btn-outline-info btn-xm" type="button" (click)="hidePost(post)" >Hide this Post</button></div> -->
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                        </ul>
+       
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
-
-
-<!-- User Profile Favorite Section -->
-<!-- User Profile Favorite Section -->
-<!-- User Profile Favorite Section -->
-<div class="col-3">
-    <div class="card" style="background-color: #0EBB9A;">
-        <h2>Favorites</h2>
-    </div>
-</div>
-
-<!-- End of 2nd row on User Profile -->
-</div>
+</body>

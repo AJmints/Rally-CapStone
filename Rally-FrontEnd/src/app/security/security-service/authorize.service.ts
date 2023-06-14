@@ -41,9 +41,6 @@ export class AuthorizeService {
 
   /* When logging out, post the JWT token to the block list so it can't be used again */
   logOut() {
-    if (this.isloggedIn()) {
-    this.http.get('http://localhost:8080/api/logout').subscribe();
-    };
     localStorage.removeItem('userName');
     localStorage.removeItem('id');
     this.cookieService.delete('token');

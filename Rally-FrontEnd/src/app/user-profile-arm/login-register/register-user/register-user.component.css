@@ -1,0 +1,32 @@
+.logInButton {
+    background-color: #0EBB9A;
+    text-align: center;
+	color:#ffffff;
+	font-family: 'Open Sans', sans-serif;
+	font-size:20px;
+    font-weight: 500;
+    width: 125px;
+    height: 65px;
+    padding-top: 20px;
+	text-decoration: none;
+}
+
+/* .logOutButton {
+    background-color: #0EBB9A;
+    text-align: center;
+	color:#ffffff;
+	font-family: 'Open Sans', sans-serif;
+	font-size:20px;
+    font-weight: 500;
+    width: 125px;
+    height: 65px;
+	text-decoration: none;
+} */
+
+a.logInButton:hover{
+    background-color: #14CFAD;
+    color: #85CDE3;
+  }
+  a.nav-link:hover {
+    color: #85CDE3;
+  }

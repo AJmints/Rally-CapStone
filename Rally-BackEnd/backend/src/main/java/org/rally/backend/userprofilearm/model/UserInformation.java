@@ -11,7 +11,7 @@ public class UserInformation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String userName;
+    private Integer userId;
 
     @NotNull
     @Size(min = 3, max = 20)
@@ -33,8 +33,8 @@ public class UserInformation {
     public UserInformation() {
     }
 
-    public UserInformation(String userName, String firstName, String lastName, String neighborhood, String city, String state) {
-        this.userName = userName;
+    public UserInformation(Integer userId, String firstName, String lastName, String neighborhood, String city, String state) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.neighborhood = neighborhood;
@@ -66,12 +66,12 @@ public class UserInformation {
         this.city = city;
     }
 
-    public String getUserName() {
-        return userName;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getFirstName() {

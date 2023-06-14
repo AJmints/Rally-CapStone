@@ -1,42 +1,84 @@
-<!-- Search bar row container -->
-<div class="card" style="background-color: #F9A605">
-<div class="row" >
-    <div class="col">
-            <h2>Search</h2>
+<header>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+            <div class="container">
+            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="container">
+                    <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                    <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                    </ul>
+                </div>             
+                <div>
+                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                </div>
+            </div>
+            </div>
+        </nav>
     </div>
+</header>
 
+
+<body>
+<div class="container">
+
+
+<!-- Search bar row container -->
+<div class="row">
+<div style="margin-top: 140px;"> 
+    <h2 style="font-family: 'Open Sans' sans-serif; font-size: 35px;  margin-bottom: -60px;">search profiles</h2>
     <div class="col" style="color: crimson;" *ngIf="characterError">You may enter between 1 through 25 characters only</div>
+        <br><br><br><br>
+        <div>
+        <!-- Search bar inputs -->
+        <form #searchUser="ngForm" (ngSubmit)="searchForUser(searchUser)">
+            <input class="form-control form-control-lg" type="text" placeholder="name" name="search" [(ngModel)]="commentBox">
+            <div style="margin-top: 10px;">
+                <input class="btn btn-outline-info btn-xm" style="border-radius: 5px" type="submit" value="search">
+                <input class="btn btn-outline-info btn-xm" style="margin-left: 5px; border-radius: 5px;" type="button" (click)="resetResults()" value="reset">
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
 
-    <!-- Search bar inputs -->
-    <div class="col">
-        <div class="topnav">
-            <div class="search-container">
-                <form #searchUser="ngForm" (ngSubmit)="searchForUser(searchUser)">
-                <input type="text" placeholder="Search.." name="search" ngModel>
-                <input type="submit" value="Search">
-                <input type="button" (click)="resetResults()" value="Reset Search">
-                </form>
+<div *ngIf="reset">
+    <h2>Loading......</h2>
+</div>
+
+<div class="card" style="margin: 0px;">
+    <div class="scroll">
+    <br><br>
+        <div class="row">
+        <!-- Iterate through the userlist to display results -->
+        <div class="card col-md-2 g-0" *ngFor="let user of this?.dbImage">
+            <!-- Display user profile picture -->
+            <div class="card" style="margin: 0px" >
+            <div *ngIf="user.image" class="card" style="margin: 0px" width="100%" height="auto">
+            <img [src]="user.image">
+            </div>
+            <div *ngIf="user?.image === null" class="card" style="margin: 0px">
+            <img src="/assets/user-profile-assets/profile-pic.gif">
+            </div>
+            </div>
+            <!-- Display user name as link -->
+            <div class="card-body">
+                <p style="text-align: center; font-size: 15px; font-weight: 500;">
+                <a routerLink="/user/{{user.userName}}" routerLinkActive="active">{{user.userName}}</a></p>
             </div>
         </div>
+        </div>
+    <br><br>
     </div>
-</div>   
 </div>
 
 
-<!-- Display users container/banner -->
-<div class="card" style="background-color: #F9A605">
-<div class="row">
-    <div class="col">
-        <div class="card" style="background-color: #F9A605">
-            <h2>User Name</h2>
-        </div>
-    </div>
 </div>
-<!-- Iterate through the userlist to display results -->
-<div class="row" *ngFor = "let user of userList">
-    <div class="col">
-        <div class="card" style="background-color: #ecdfc3;">
-            <h2><a routerLink="/user/{{user.userName}}" routerLinkActive="active">{{ user.userName }}</a></h2>
-        </div>
-    </div>
-</div>
+</body>

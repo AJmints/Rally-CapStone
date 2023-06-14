@@ -148,19 +148,22 @@ export class RegisterUserComponent implements OnInit {
       state: userDetails.value.state
     }
 
-    this.emailVerifyLoading = true;
+    
     /* check that first and last name are filled in */
     let response: any[] = this.reglogService.userInformationCheck(userInfo);
     if (response.length === 0) {
-
+      this.emailVerifyLoading = true;
       /* if successful, set up DTO to talk to back end and post */
       let userBundle: UserBundleDTO = {
         registerDTO: this.registerUser,
         userInfoDTO: userInfo
+        
       }
   
-      this.http.post('http://localhost:8080/api/register', userBundle).subscribe((response: any) => {
+      this.http.post( this.hostUrl + '/api/register', userBundle).subscribe((response: any) => {
+        
         if (response.message === "Verify your account with the link sent to your email!") {
+          this.noErrorInFormSubmit = true;
             this.emailVerifyLoading = false;
             this.postResponseMessageValid = response.message;
             return;

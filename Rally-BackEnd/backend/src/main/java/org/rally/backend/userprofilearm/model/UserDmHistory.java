@@ -6,10 +6,20 @@ public class UserDmHistory {
 
     List<UserEntity> userEntities;
     List<DirectMessage> directMessageList;
+    List<ProfilePicture> profilePictures;
 
-    public UserDmHistory(List<UserEntity> userEntities, List<DirectMessage> directMessageList) {
+    public UserDmHistory(List<UserEntity> userEntities, List<DirectMessage> directMessageList, List<ProfilePicture> profilePictures) {
         this.userEntities = userEntities;
         this.directMessageList = directMessageList;
+        this.profilePictures = profilePictures;
+    }
+
+    public List<ProfilePicture> getProfilePictures() {
+        return profilePictures;
+    }
+
+    public void setProfilePictures(List<ProfilePicture> profilePictures) {
+        this.profilePictures = profilePictures;
     }
 
     public List<UserEntity> getUserEntities() {
