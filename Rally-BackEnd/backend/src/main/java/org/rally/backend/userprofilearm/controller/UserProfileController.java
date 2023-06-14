@@ -8,6 +8,8 @@ import org.rally.backend.forumarm.repository.ForumPostRepository;
 import org.rally.backend.forumarm.repository.RepliesRepository;
 import org.rally.backend.servicesarm.model.response.Service;
 import org.rally.backend.servicesarm.repository.ServiceRepository;
+import org.rally.backend.springsecurity.models.BadJWT;
+import org.rally.backend.springsecurity.repository.JWTBlockListRepository;
 import org.rally.backend.springsecurity.security.jwt.JWTGenerator;
 import org.rally.backend.userprofilearm.exception.MinimumCharacterException;
 import org.rally.backend.userprofilearm.model.*;
@@ -30,21 +32,22 @@ import java.util.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 @RequestMapping(value = "/user")
 public class UserProfileController {
 
-    UserRepository userRepository;
-    UserInformationRepository userInformationRepository;
-    RoleRepository roleRepository;
-    DirectMessageRepository directMessageRepository;
-    ProfilePictureRepository profilePictureRepository;
-    ForumPostRepository forumPostRepository;
-    RepliesRepository repliesRepository;
-    HiddenPostRepository hiddenPostRepository;
-    ServiceRepository serviceRepository;
-    EventRepository eventRepository;
-    private JWTGenerator jwtGenerator;
+    private final UserRepository userRepository;
+    private final UserInformationRepository userInformationRepository;
+    private final RoleRepository roleRepository;
+    private final DirectMessageRepository directMessageRepository;
+    private final ProfilePictureRepository profilePictureRepository;
+    private final ForumPostRepository forumPostRepository;
+    private final RepliesRepository repliesRepository;
+    private final HiddenPostRepository hiddenPostRepository;
+    private final ServiceRepository serviceRepository;
+    private final EventRepository eventRepository;
+    private final JWTBlockListRepository jwtBlockListRepository;
+    private final JWTGenerator jwtGenerator;
 
 
     @Autowired
@@ -53,7 +56,8 @@ public class UserProfileController {
                                  DirectMessageRepository directMessageRepository, ProfilePictureRepository profilePictureRepository,
                                  ForumPostRepository forumPostRepository, RepliesRepository repliesRepository,
                                  HiddenPostRepository hiddenPostRepository, ServiceRepository serviceRepository,
-                                 EventRepository eventRepository, JWTGenerator jwtGenerator) {
+                                 EventRepository eventRepository, JWTGenerator jwtGenerator,
+                                 JWTBlockListRepository jwtBlockListRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userInformationRepository = userInformationRepository;
@@ -65,6 +69,7 @@ public class UserProfileController {
         this.serviceRepository = serviceRepository;
         this.eventRepository = eventRepository;
         this.jwtGenerator = jwtGenerator;
+        this.jwtBlockListRepository = jwtBlockListRepository;
     }
 
     /** GET REQUEST **/
@@ -129,9 +134,11 @@ public class UserProfileController {
     @GetMapping("/getMainUserBundleInformation/{userName}")
     public ResponseEntity<?> getMainUserBundle(@PathVariable String userName, @RequestHeader (name="authorization") String token) {
 
+        Optional<BadJWT> test = Optional.ofNullable(jwtBlockListRepository.findByBadToken(token.substring(7, token.length())));
 
-        if (!jwtGenerator.validateToken(token.substring(7, token.length()))) {
-            return new ResponseEntity<>(new ResponseMessage("Bad Token"), HttpStatus.OK);
+        if (!jwtGenerator.validateToken(token.substring(7, token.length())) || test.isPresent()) {
+            ResponseMessage responseMessage = new ResponseMessage("Bad Token");
+            return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
 
         Optional<UserEntity> areYouThere = Optional.ofNullable(userRepository.findByUserName(userName));

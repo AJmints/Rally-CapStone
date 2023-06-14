@@ -3,6 +3,7 @@ package org.rally.backend.springsecurity.controller;
 import org.rally.backend.springsecurity.models.ConfirmationToken;
 import org.rally.backend.springsecurity.payload.response.JWTResponse;
 import org.rally.backend.springsecurity.repository.ConfirmationTokenRepository;
+import org.rally.backend.springsecurity.repository.JWTBlockListRepository;
 import org.rally.backend.springsecurity.security.jwt.JWTGenerator;
 import org.rally.backend.springsecurity.security.services.UserServicesImpl;
 import org.rally.backend.userprofilearm.exception.MinimumCharacterException;
@@ -47,6 +48,7 @@ public class AuthenticationController {
     private JWTGenerator jwtGenerator;
     private UserServicesImpl userServicesImpl;
     private ConfirmationTokenRepository confirmationTokenRepository;
+    private JWTBlockListRepository jwtBlockListRepository;
 
 
     @Autowired
@@ -57,7 +59,8 @@ public class AuthenticationController {
                                     PasswordEncoder passwordEncoder,
                                     JWTGenerator jwtGenerator,
                                     UserServicesImpl userServicesImpl,
-                                    ConfirmationTokenRepository confirmationTokenRepository) {
+                                    ConfirmationTokenRepository confirmationTokenRepository,
+                                    JWTBlockListRepository jwtBlockListRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userInformationRepository = userInformationRepository;
@@ -66,6 +69,8 @@ public class AuthenticationController {
         this.jwtGenerator = jwtGenerator;
         this.userServicesImpl = userServicesImpl;
         this.confirmationTokenRepository = confirmationTokenRepository;
+        this.jwtBlockListRepository = jwtBlockListRepository;
+
     }
 
     @PostMapping("/register")
