@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Rally-BackEnd.iml" filepath="$PROJECT_DIR$/.idea/Rally-BackEnd.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backend.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.rally.backend.backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.rally.backend.backend.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/org.rally.backend.main.iml" filepath="$PROJECT_DIR$/.idea/modules/org.rally.backend.main.iml" />
     </modules>
   </component>
