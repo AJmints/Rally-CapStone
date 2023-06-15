@@ -1,49 +1,73 @@
-
 .logInButton {
     background-color: #0EBB9A;
     text-align: center;
 	color:#ffffff;
-	font-family: 'Open Sans', sans-serif;
+	font-family: montserrat, sans-serif;
 	font-size:20px;
     font-weight: 500;
     width: 125px;
     height: 65px;
-    padding-top: 20px;
+    border: none;
 	text-decoration: none;
 }
-
 .logOutButton {
     background-color: #0EBB9A;
     text-align: center;
-	color:#ffffff;
-	font-family: 'Open Sans', sans-serif;
-	font-size:20px;
+    color:#ffffff;
+    font-family: 'Open Sans', sans-serif;
+    font-size:20px;
     font-weight: 500;
     width: 125px;
     height: 65px;
-	text-decoration: none;
-}
-
+    border: none;
+    text-decoration: none;
+  }
 .nav-link {
     color: black;
     font-weight: 450;
     font-size: 15px;
 }
-
+button.logInButton:hover {
+    background-color: #14cfad;
+    color: #85cde3;
+  }
+  button.logOutButton:hover{
+    background-color: #14cfad;
+    color: #85cde3;
+  }
+button.logOutButton:hover{
+    background-color: #14cfad;
+    color: #85cde3;
+  }
+  a.nav-link:hover {
+    color: #85cde3;
+  }
+/* .RH5 {
+    font-family: montserrat, sans-serif;
+    text-align: left;
+    font-size: 100px;
+    font-weight: 900;
+} */
 
 .card-body {
     background-color: #0EBB9A;
 }
 
 .Rh1 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: Oswald, sans-serif;
     font-size: 50px;
     text-align: center;
     margin-bottom: 20px;
 }
 
+/* .Rh2 {
+    font-family: Oswald, sans-serif;
+    font-size: 80px;
+    text-align: center;
+} */
 
 .Rp1 {
+    font-family: montserrat, sans-serif;
     font-size: 20px;
     text-align: center;
     margin-top: -15px;
@@ -52,19 +76,22 @@
 
 
 .Rp2 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: Oswald, sans-serif;
     font-size: 30px;
     font-weight: 800;
     text-align: center;
+    /* color: white; */
 }
 
 .Rp3 {
+    font-family: Montserrat, sans-serif;
     font-size: 20px;
     text-align: center;
+    /* color: white; */
 }
 
 .Rp4 {
-    font-family: 'Open Sans', sans-serif;
+    font-family: Oswald, sans-serif;
     font-size: 20px;
     font-weight: 800;
     text-align: left;
@@ -73,14 +100,9 @@
 }
 
 .Rp5 {
+    font-family: montserrat, sans-serif;
     font-size: 20px;
     text-align: left;
     margin-top: 0px;
     margin-bottom: 30px;
 }
-
-a {
-    color: black;
-    text-decoration: none;
-}
-

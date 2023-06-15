@@ -39,10 +39,10 @@ export class EmailVerificationComponent implements OnInit {
 
     /* Failed */
       if (response.message === 'Token not present') {
-        this.verificationResponse = "Token expired, being rerouted to login in 5 seconds."
+        this.verificationResponse = "Token expired, being rerouted to home in 10 seconds."
         setTimeout(() => {
-          this.router.navigate(["/login"]);
-        }, 5000);
+          this.router.navigate(["/home"]);
+        }, 10000);
       }
     /* Success */
       if (response.success) {

@@ -30,3 +30,50 @@ a.logInButton:hover{
   a.nav-link:hover {
     color: #85CDE3;
   }
+
+  .nav-link {
+    color: black;
+    font-weight: 450;
+    font-size: 15px;
+}  
+
+  .Rp1 {
+    font-family: montserrat, sans-serif;
+    font-size: 20px;
+    text-align: center;
+    margin-top: -15px;
+
+}
+
+
+.Rp2 {
+    font-family: Oswald, sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    text-align: center;
+    /* color: white; */
+}
+
+.Rp3 {
+    font-family: Montserrat, sans-serif;
+    font-size: 20px;
+    text-align: center;
+    /* color: white; */
+}
+
+.Rp4 {
+    font-family: Oswald, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    text-align: left;
+    margin-top: 25px;
+    margin-bottom: 0px;
+}
+
+.Rp5 {
+    font-family: montserrat, sans-serif;
+    font-size: 20px;
+    text-align: left;
+    margin-top: 0px;
+    margin-bottom: 30px;
+}

@@ -48,7 +48,8 @@ export class HomeComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
   logOut() {
-    this.logInStatus = false;
+   
     this.themeservice.logOut();
+    this.logInStatus = false;
   }
 }
