@@ -10,6 +10,8 @@ const AUTH_API = 'http://localhost:8080/verify/'
 })
 export class AuthorizeService {
 
+  private hostUrl = 'http://localhost:8080';
+
   constructor(private router: Router,
               private cookieService: CookieService,
               private http: HttpClient) { }
@@ -41,6 +43,9 @@ export class AuthorizeService {
 
   /* When logging out, post the JWT token to the block list so it can't be used again */
   logOut() {
+    if (this.isloggedIn()) {
+      this.http.get( this.hostUrl + '/api/logout').subscribe();
+      };
     localStorage.removeItem('userName');
     localStorage.removeItem('id');
     this.cookieService.delete('token');

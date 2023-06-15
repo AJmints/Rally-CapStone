@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizeService } from '../security-service/authorize.service';
+import { LoginDTO } from 'src/app/user-profile-arm/models/dto/LoginDTO';
 
 @Component({
   selector: 'app-email-verification',
@@ -9,15 +11,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class EmailVerificationComponent implements OnInit {
 
+  private hostUrl = 'http://localhost:8080';
+
   tokenId: string;
+  logInStatus = false;
   verificationResponse: string;
 
   constructor(private route: ActivatedRoute, 
               private http: HttpClient,
-              private router: Router) {
+              private router: Router,
+              private authorize: AuthorizeService) {
    }
 
   ngOnInit(): void {
+
+    if (this.authorize.isloggedIn()) {
+      this.logInStatus = true;
+    }
 
     /* Pull verification token from active url */
     this.route.paramMap.subscribe(params => {
@@ -25,13 +35,13 @@ export class EmailVerificationComponent implements OnInit {
     });
     
     /* Send the token to the back to get verified  */
-    this.http.post('http://localhost:8080/api/confirm-account', this.tokenId).subscribe((response: any) => {
+    this.http.post( this.hostUrl + '/api/confirm-account', this.tokenId).subscribe((response: any) => {
 
     /* Failed */
       if (response.message === 'Token not present') {
-        this.verificationResponse = "Token expired, being rerouted to register in 5 seconds."
+        this.verificationResponse = "Token expired, being rerouted to login in 5 seconds."
         setTimeout(() => {
-          this.router.navigate(["/register"]);
+          this.router.navigate(["/login"]);
         }, 5000);
       }
     /* Success */
@@ -41,6 +51,10 @@ export class EmailVerificationComponent implements OnInit {
         this.verificationResponse = response.message;
       } 
     })
+  }
+
+  logOut() {
+    this.authorize.logOut();
   }
 
 }
