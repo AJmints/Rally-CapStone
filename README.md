@@ -12,8 +12,8 @@ For this assignment, you will submit a high-level outline of your project. This 
 Rally is a website that is tailored to a specific neighborhood within a city that provides information, resources, services, opportunities, and connections with residents. Our team was interested in fulfilling a need to foster increased community connection. Rally intends to accomplish this task and may include features that are not normally available on other social networking sites into a centralized hub, and tailored to the local scope. The webpage will be broken into multiple tabs. Users will be allowed to create a user profile with a unique identity and login. There will also be a community forum for messaging; an events page to offer project ideas and to solicit volunteers; a page with restaurant listings in the community with reviews; a services page listing offers or requests for freelance work, ridesharing, dogwalking, or childcare; and a resources tab that includes a table of local information with tags. 
 
 ### Features
-My Profile - Alex <br>
-Community Forum - Adam<br>
+My Profile/Spring Security - Alex <br>
+Community Forum/Deployment - Adam<br>
 Events Page (Volunteering for Projects, Events) - Jami<br>
 Restaurants - James<br>
 Services (Freelance work, Rideshares, Dogwalking, Childcare) - Sam<br>
