@@ -9,15 +9,13 @@ import { Router } from '@angular/router';
 })
 export class EventService {
 
-  private getEventByIdUrl = 'http://localhost:8080/events/event/';
-  private updateEventUrl = 'http://localhost:8080/events/edit/event/';
-  private deleteEventUrl = 'http://localhost:8080/events/edit/delete';
-  // private deleteEventByIdUrl = 'http://localhost:8080/events/event/';
+  hostUrl = 'http://localhost:8080'
 
-  // private getJoinByIdUrl = 'http://localhost8080/join/join';
-  // private getJoinByIdUrl = 'http://localhost8080/join/event';
-  private updateJoinUrl = 'http://localhost8080/join/edit/join/';
-  private deleteJoinUrl = 'http://localhost8080/join/edit/delete/';
+  private getEventByIdUrl = this.hostUrl + '/events/event/';
+  private updateEventUrl = this.hostUrl + '/events/edit/event/';
+  private deleteEventUrl = this.hostUrl + '/events/edit/delete';
+  private updateJoinUrl = this.hostUrl + '/join/edit/join/';
+  private deleteJoinUrl = this.hostUrl + '/join/edit/delete/';
   
 
   constructor(private http: HttpClient, private router: Router) { }
@@ -31,7 +29,7 @@ export class EventService {
   }
 
   deleteEvent(id: string) {
-    // return this.http.post('http://localhost:8080/events/edit/delete', +id);
+
     return this.http.post(`${this.deleteEventUrl}`, +id);
   }
 
@@ -48,7 +46,7 @@ export class EventService {
   }
 
   deleteJoin(id: string) {
-    // return this.http.post('http://localhost:8080/join/edit/delete', +id);
+
     return this.http.post(`${this.deleteJoinUrl}`, +id);
   }
 

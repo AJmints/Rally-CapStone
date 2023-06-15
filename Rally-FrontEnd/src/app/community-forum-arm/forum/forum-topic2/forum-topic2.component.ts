@@ -7,14 +7,15 @@ import { ForumPost } from '../../models/ForumPost';
 import { map } from 'rxjs/operators'
 import { ReplyDTO } from '../../models/ReplyDTO';
 import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
-import { ForumPostDTO } from '../../models/ForumPostDTO';
 import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
+import { ForumPostDTO } from '../../models/ForumPostDTO';
 @Component({
   selector: 'app-forum-topic2',
   templateUrl: './forum-topic2.component.html',
   styleUrls: ['./forum-topic2.component.css']
 })
 export class ForumTopic2Component implements OnInit {
+  hostUrl = 'http://localhost:8080'
   forumTopic: string;
   currentUser: string;
   logInStatus: Boolean;
@@ -59,18 +60,20 @@ export class ForumTopic2Component implements OnInit {
     this.checkTheme();
     this.getPosts();
   }
-  login(){
-    this.router.navigate(["/login"]);
-  }
   checkTheme(){
       if (localStorage.getItem('theme') == 'dark'){
           this.Dark();
       }
   }
+  login(){
+    this.router.navigate(["/login"]);
+  }
   createPostButton(){
       this.createPostBoolean = true;
   }
-
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
+  }
   createPost(postInformation: NgForm){
     this.createPostBoolean = false;
     let postDetails: ForumPostDTO = {
@@ -79,7 +82,7 @@ export class ForumTopic2Component implements OnInit {
       username: this.currentUser,
       category: this.forumTopic
     }
-    this.http.post(`http://localhost:8080/Posts`, postDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + `/Posts`, postDetails).subscribe((res) => {
       this.getPosts();
   });
   }
@@ -111,7 +114,7 @@ Dark(){
       description: "",
       id: postId
     }
-    this.http.post('http://localhost:8080/LikePost', likeDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + '/LikePost', likeDetails).subscribe((res) => {
       this.getPosts();
     });
 

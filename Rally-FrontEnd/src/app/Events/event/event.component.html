@@ -6,25 +6,20 @@
             <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
                 <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
             </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="navbar-collapse" id="navbarSupportedContent">
                 <div class="container">
                     <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
                     <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
                     <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
                     <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
                     <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
                     <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
                     </ul>
                 </div>    
-                
-                <div *ngIf="logInStatus; else notLoggedIn">
+                    
                     <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                </div>
 
-                    <ng-template #notLoggedIn>
-                        <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                    </ng-template>
             </div>
             </div>
         </nav>
@@ -45,8 +40,12 @@
             </div>
             <div class="col">
                 <span>
-                    <a *ngIf="!userJoined" routerLink="/join/{{eventDetails.id}}" routerLinkActive="active" class="myButton">JOIN EVENT</a>
-                    <a *ngIf="userJoined" routerLink="/edit/join/{{eventDetails.id}}" routerLinkActive="active" class="myButton">UPDATE RSVP</a> 
+                    <div *ngIf="!currentUserButtonLoading">
+                    <a *ngIf="!userJoined; else updateButton" routerLink="/join/{{eventDetails.id}}" routerLinkActive="active" class="myButton">JOIN EVENT</a>
+                    <ng-template #updateButton>
+                        <a routerLink="/edit/join/{{eventDetails.id}}" routerLinkActive="active" class="myButton">UPDATE RSVP</a> 
+                    </ng-template>
+                    </div>
                 </span>
             </div>
         </div>

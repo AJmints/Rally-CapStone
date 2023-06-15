@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Resource } from '../models/resource';
+import { Resource } from '../models/Resource';
 // import { EventViewComponent } from '../event-view/event-view.component';
 
 @Injectable({
@@ -10,7 +10,9 @@ import { Resource } from '../models/resource';
 })
 export class ResourceFilterService {
 
-  private getResourcesByCategoryUrl = 'http://localhost:8080/resources/';
+  private hostUrl = 'http://localhost:8080'  
+
+  private getResourcesByCategoryUrl = this.hostUrl + '/resources/';
 
   constructor(private http: HttpClient, private router: Router) { }
 

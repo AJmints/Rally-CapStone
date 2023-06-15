@@ -3,6 +3,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Event } from '../models/event';
 import { JoinEvent } from '../models/JoinEvent';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 
 @Component({
   selector: 'app-event-view',
@@ -10,6 +13,8 @@ import { JoinEvent } from '../models/JoinEvent';
   styleUrls: ['./event-view.component.css']
 })
 export class EventViewComponent implements OnInit {
+
+  private hostUrl = 'http://localhost:8080'
 
   isLoading: boolean = true;
 
@@ -33,11 +38,11 @@ export class EventViewComponent implements OnInit {
   numJoined: number = 0;
   
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private http: HttpClient, private router: Router) {
     this.logInStatus = false;
 
-    this.eventsUrl = 'http://localhost:8080/events/events/'
-    this.joinUrl = 'http://localhost:8080/join/join/'
+    this.eventsUrl = this.hostUrl + '/events/events/'
+    this.joinUrl = this.hostUrl + '/join/join/'
 
     this.eventList;
     this.filteredEvents;
@@ -53,8 +58,15 @@ export class EventViewComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
-   
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+    this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+    .subscribe((data: any) => {
+      this.currentUser = data.viewUser.userName
+    })
+  }
    
     this.http.get(this.eventsUrl).subscribe((response: Event[]) => {
       console.log(response);
@@ -130,26 +142,9 @@ filter(string: string) {
   //   window.location.reload();
   // }
 
-
-  verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
-
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
-
-
-
-
 
 }
 

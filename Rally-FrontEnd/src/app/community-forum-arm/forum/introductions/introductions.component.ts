@@ -7,14 +7,15 @@ import { map } from 'rxjs/operators';
 import { ForumPost } from '../../models/ForumPost';
 import { ReplyDTO } from '../../models/ReplyDTO';
 import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
-import { ForumPostDTO } from '../../models/ForumPostDTO';
 import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
+import { ForumPostDTO } from '../../models/ForumPostDTO';
 @Component({
   selector: 'app-introductions',
   templateUrl: './introductions.component.html',
   styleUrls: ['./introductions.component.css']
 })
 export class IntroductionsComponent implements OnInit {
+  hostUrl = 'http://localhost:8080'
   forumTopic: string;
   currentUser: string;
   logInStatus: Boolean;
@@ -58,9 +59,6 @@ export class IntroductionsComponent implements OnInit {
     this.checkTheme();
     this.getPosts();
   }
-  login(){
-    this.router.navigate(["/login"]);
-  }
   checkTheme(){
       if (localStorage.getItem('theme') == 'dark'){
           this.Dark();
@@ -68,6 +66,12 @@ export class IntroductionsComponent implements OnInit {
       else{
         this.Light();
       }
+  }
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
+  }
+  login(){
+    this.router.navigate(["/login"]);
   }
   createPostButton(){
       this.createPostBoolean = true;
@@ -81,7 +85,7 @@ export class IntroductionsComponent implements OnInit {
       username: this.currentUser,
       category: this.forumTopic
     }
-    this.http.post(`http://localhost:8080/Posts`, postDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + `/Posts`, postDetails).subscribe((res) => {
       this.getPosts();
   });
   }
@@ -113,7 +117,7 @@ Dark(){
       description: "",
       id: postId
     }
-    this.http.post('http://localhost:8080/LikePost', likeDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + '/LikePost', likeDetails).subscribe((res) => {
       this.getPosts();
     });
 

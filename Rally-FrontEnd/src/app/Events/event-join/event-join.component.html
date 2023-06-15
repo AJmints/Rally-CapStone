@@ -6,111 +6,107 @@
         <title>event-join</title>
       </head> -->
 
-        <header>
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+      <header>
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+                <div class="container">
+                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                </a>
+                <div class="navbar-collapse" id="navbarSupportedContent">
                     <div class="container">
-                    <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
-                        <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
-                    </a>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="container">
-                            <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
-                            <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
-                            </ul>
-                        </div>    
-                        
-                        <div *ngIf="logInStatus; else notLoggedIn">
-                            <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                        </div>
-        
-                            <ng-template #notLoggedIn>
-                                <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                            </ng-template>
-                    </div>
-                    </div>
-                </nav>
-            </div>
-          </header>
+                        <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                        <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                        </ul>
+                    </div>    
+                    
+                
+                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+               
+                </div>
+                </div>
+            </nav>
+        </div>
+      </header>
 
 
 <body style="margin-top: 120px;">
-    <div class="container">
+<div class="container">
 
-      
+  
 
 
-            <div id="list_head">
-                <p>Join:  {{event?.eventTitle}}</p> 
-            </div>
+        <div id="list_head">
+            <p>Join:  {{event?.eventTitle}}</p> 
+        </div>
+    
+        <br>
+        <br>
+       
+               
+            <form #joinEventInformation="ngForm" (ngSubmit)="joinEvent(joinEventInformation)">
+
+                <div class="row">
+                    <div class="col-5">
+
+                        <input type="hidden" id="event" name="event" value="event" ngModel>
+                        
+                        <div class="mb-3">
+                        <label class="form-label">name</label><br>
+                        <input class="form-control form-control-lg" type="text" required #attending="ngModel" id="attending" name="attending" ngModel>
         
-            <br>
-            <br>
-           
-                   
-                <form #joinEventInformation="ngForm" (ngSubmit)="joinEvent(joinEventInformation)">
-
-                    <div class="row">
-                        <div class="col-5">
-
-                            <input type="hidden" id="event" name="event" value="event" ngModel>
+                        <div *ngIf="attending.invalid && (attending.dirty || attending.touched)" class="alert alert-danger" >
+                            Who is joining the event?</div>
+                          
+                        <br>
+                        <label class="form-label">email</label><br>
+                        <input class="form-control form-control-lg" type="text" required email #contactEmail="ngModel" id="email" name="contactEmail" ngModel>
+        
+                        <div  *ngIf="contactEmail.invalid && (contactEmail.dirty || contactEmail.touched)" class="alert alert-danger">
                             
-                            <div class="mb-3">
-                            <label class="form-label">name</label><br>
-                            <input class="form-control form-control-lg" type="text" required #attending="ngModel" id="attending" name="attending" ngModel>
-            
-                            <div *ngIf="attending.invalid && (attending.dirty || attending.touched)" class="alert alert-danger" >
-                                Who is joining the event?</div>
-                              
-                            <br>
-                            <label class="form-label">email</label><br>
-                            <input class="form-control form-control-lg" type="text" required email #contactEmail="ngModel" id="email" name="contactEmail" ngModel>
-            
-                            <div  *ngIf="contactEmail.invalid && (contactEmail.dirty || contactEmail.touched)" class="alert alert-danger">
-                                
-                                <div *ngIf="contactEmail.errors.required">
-                                    Who can we contact?
-                                </div>    
-            
-                                <div *ngIf="contactEmail.errors.email">
-                                    Whoops! We need a valid email address.
-                                </div>
-                            
+                            <div *ngIf="contactEmail.errors.required">
+                                Who can we contact?
+                            </div>    
+        
+                            <div *ngIf="contactEmail.errors.email">
+                                Whoops! We need a valid email address.
                             </div>
-            
-                            <br>
-                            <label class="form-label">number attending</label><br>
-                            <input class="form-control form-control-lg" type="number" required #numAttending="ngModel" id="numAttending" name="numAttending" ngModel>
-                            
-                            <div *ngIf="numAttending.invalid && (numAttending.dirty || numAttending.touched)" class="alert alert-danger">
-                                How many are coming?
-                            </div>
-            
-                            <br>    
-                            <label class="form-label">add comment (optional)</label><br>
-                            <textarea class="form-control" rows="5" id=comment name="comment" ngModel></textarea>
-                                   
-                            <br>
-                            <br>
-                           
-                            <button [disabled]="joinEventInformation.invalid" type="submit" id="join_btn">SUBMIT</button>
-                            <br>
-                                <!-- <div *ngIf="eventInformation.invalid && eventInformation.touched" class="alert alert-danger">
-                                    Make sure you've filled out the whole form!
-                                </div> -->
-                            </div>
-            
+                        
                         </div>
+        
+                        <br>
+                        <label class="form-label">number attending</label><br>
+                        <input class="form-control form-control-lg" type="number" required #numAttending="ngModel" id="numAttending" name="numAttending" ngModel>
+                        
+                        <div *ngIf="numAttending.invalid && (numAttending.dirty || numAttending.touched)" class="alert alert-danger">
+                            How many are coming?
+                        </div>
+        
+                        <br>    
+                        <label class="form-label">add comment (optional)</label><br>
+                        <textarea class="form-control" rows="5" id=comment name="comment" ngModel></textarea>
+                               
+                        <br>
+                        <br>
+                       
+                        <button [disabled]="joinEventInformation.invalid" type="submit" id="join_btn">SUBMIT</button>
+                        <br>
+                            <!-- <div *ngIf="eventInformation.invalid && eventInformation.touched" class="alert alert-danger">
+                                Make sure you've filled out the whole form!
+                            </div> -->
+                        </div>
+        
                     </div>
- 
-                </form>
+                </div>
+
+            </form>
 
 
-    </div>
+</div>
 </body>
 <!-- </html> -->

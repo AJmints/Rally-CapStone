@@ -23,7 +23,172 @@
                 </div>
                     <div *ngIf="!loginLoading">
                         <div *ngIf="logInStatus; else notLoggedIn">
-                            <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                            <button class="logOutButton" (click)="logOut()">LOG <div class="marginResetting">
+                                <!-- light/dark theme buttons    -->
+                                <div *ngIf="!darktheme; else darkSections">
+                                    <header style="position: relative;">
+                                        <div class="container-fluid">
+                                            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+                                                <div class="container">
+                                                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                                                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                                                </a>
+                                                <div class="centering" id="navbarSupportedContent">
+                                                    <div style="text-align: center;" >
+                                                        <ul class="nav justify-content-end">
+                                                        <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="blackcolor">EVENTS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="blackcolor">FORUMS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active"><span class="blackcolor">EATS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="blackcolor">SERVICES</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="blackcolor">RESOURCES</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="blackcolor">MY PROFILE</span></a></li>
+                                                        </ul>
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                                <div *ngIf="!loginLoading">
+                                                    <div *ngIf="logInStatus; else notLoggedIn">
+                                                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                                                    </div>
+                                    
+                                                        <ng-template #notLoggedIn>
+                                                            <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
+                                                        </ng-template>
+                                                    </div>
+                                            </nav>
+                                        </div>
+                                      </header>
+                                    <div id="theme" class="white">
+                            <!-- background theme  -->
+                            <div>
+                                <br><br>
+                                    <h1 style="font-family: 'Open Sans', sans-serif; font-size: 40px; font-weight: 800; margin-bottom: -15px;color:rgb(0, 0, 0);" class="center" id="title">Search Results:</h1>
+                                    <br><hr style="height:4px;  color: black; background-color: black; width: 50%; position: relative; margin: auto;">
+                            </div>
+                            <!-- Page header -->
+                                    <br>
+                                    <br>
+                                        <div class="flex-container">
+                                            <div style="width:55%; padding-left: 200px;" class="flex-child" >
+                                                <div *ngFor="let test of newArray">
+                                                    <div style="background-color: white; border-radius:7px; border:1px solid #afafaf">
+                                                    <h1 style="padding-top: 10px;padding-left: 40px;"><a class="nav-link" routerLink="/forum/post/{{test.id}}" routerLinkActive="active"><span class="blackcolorlarge">{{test.title}}</span></a></h1>
+                                                    <span style="color: rgb(0, 0, 0);padding-left: 40px;">Posted by </span><a class="nav-link" routerLink="/user/{{test.userEntity.userName}}" routerLinkActive="active"><span class="blackcolor">{{test.userEntity.userName}}</span></a> 
+                                                    </div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                            <div style="width: 20%" class="flex-child">
+                                                <div style="background-color: white;border-radius:7px;border:1px solid #afafaf">
+                                            <div *ngIf="darktheme; else lightTheme">
+                                                <button class="button3" (click)="Light()">lights on</button>
+                                            </div>
+                                            <ng-template #lightTheme>
+                                                <div style="padding-top: 15px;">
+                                                    <div *ngIf="logInStatus">
+                                                    <h5 style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px;">Hi, {{currentUser}} </h5>
+                                                    <div style="position: relative; left: 35%;">
+                                                        <img src="/assets/user-profile-assets/profile-pic.gif" width="30%" height="30%">
+                                                    </div>
+                                                    </div>
+                                                    <button style="width:50%; position: relative; left:23%;" class="button2" (click)="Dark()">lights out</button>
+                                                </div>
+                                            </ng-template>
+                                        </div>
+                                            </div>
+                                        </div>
+                            <!-- light theme posts -->
+                                    </div>
+                                </div>
+                              <ng-template #darkSections>
+                                <header class="blackbody" style="position: relative;">
+                                    <div class="container-fluid">
+                                        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(0, 0, 0); border-bottom: 1px solid #fffdfd; padding: 15px;">
+                                            <div class="container">
+                                            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                                                <img src="/assets/home-assets/rally_logo.png" alt="" height="75" width="80">
+                                            </a>
+                                            <div class="centering" id="navbarSupportedContent">
+                                                <div style="text-align: center;" >
+                                                    <ul class="nav justify-content-end">
+                                                        <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="beigecolor">EVENTS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="beigecolor">FORUMS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active"><span class="beigecolor">EATS</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="beigecolor">SERVICES</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="beigecolor">RESOURCES</span></a></li>
+                                                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="beigecolor">MY PROFILE</span></a></li>
+                                                    </ul>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                            <div *ngIf="!loginLoading">
+                                                <div *ngIf="logInStatus; else notLoggedIn">
+                                                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                                                </div>
+                                
+                                                    <ng-template #notLoggedIn>
+                                                        <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
+                                                    </ng-template>
+                                                </div>
+                                        </nav>
+                                    </div>
+                                  </header>
+                                <div id="theme" class="black">
+                                    <!-- background theme  -->
+                                    <div >
+                                        <br><br>
+                                            <h1 style="font-family: 'Open Sans', sans-serif; font-size: 40px; font-weight: 800; margin-bottom: -15px;color:beige;" class="center" id="title">Search Results:</h1>
+                                            <br><hr style="height:4px;  color: beige; background-color: beige; width: 50%; position: relative; margin: auto;">
+                                    </div>
+                                    <!-- Page header -->
+                                            <br>
+                                            <br>
+                            
+                                            <div class="flex-container">
+                                                <div style="min-width:65%; padding-left: 200px;" class="flex-child" >
+                                                    <div *ngFor="let test of newArray">
+                                                        <div style="background-color: rgb(0, 0, 0); border-radius:7px; border:1px solid #afafaf">
+                                                        <h1 style="padding-top: 10px;padding-left: 40px;"><a class="nav-link" routerLink="/forum/post/{{test.id}}" routerLinkActive="active"><span class="beigecolorlarge">{{test.title}}</span></a></h1>
+                                                        <span style="color: beige;padding-left: 40px;">Posted by </span><a class="nav-link" routerLink="/user/{{test.userEntity.userName}}" routerLinkActive="active"><span class="beigecolor">{{test.userEntity.userName}}</span></a> 
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                </div>
+                                                <div style="width: 20%" class="flex-child">
+                                                    <div style="background-color: rgb(0, 0, 0);border-radius:7px;border:1px solid #afafaf">
+                                                <div *ngIf="darktheme; else lightTheme">
+                                                    <div style="padding-top: 15px;">
+                                                        <div *ngIf="logInStatus">
+                                                        <h5 style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px;color:beige;">Hi, {{currentUser}} </h5>
+                                                        <div style="position: relative; left: 35%;">
+                                                            <img src="/assets/user-profile-assets/profile-pic.gif" width="30%" height="30%">
+                                                        </div>
+                                                        </div>
+                                                        <br>
+                                                    </div>
+                                                    <button style="width:50%; position: relative; left:22%; bottom:12px;" class="button3" (click)="Light()">lights on</button>
+                                                </div>
+                                                <ng-template #lightTheme>
+                                                    <div style="padding-top: 15px;">
+                                                        <div *ngIf="logInStatus">
+                                                        <h5 style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px;">Hi, {{currentUser}} </h5>
+                                                        <div style="position: relative; left: 35%;">
+                                                            <img src="/assets/user-profile-assets/profile-pic.gif" width="30%" height="30%">
+                                                        </div>
+                                                        </div>
+                                                        <button style="width:50%; position: relative; left:23%;" class="button2" (click)="Dark()">lights out</button>
+                                                    </div>
+                                                </ng-template>
+                                            </div>
+                                                </div>
+                                            </div>
+                            
+                             
+                            
+                                    <!-- dark theme posts -->
+                                            </div>
+                              </ng-template>  
+                            </div>OUT</button>
                         </div>
         
                             <ng-template #notLoggedIn>

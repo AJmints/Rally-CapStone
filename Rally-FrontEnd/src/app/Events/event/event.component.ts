@@ -5,6 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Event } from '../models/event';
 import { EventService } from '../services/event.service';
 import { JoinEvent } from '../models/JoinEvent';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
 
 @Component({
   selector: 'app-event',
@@ -12,6 +15,8 @@ import { JoinEvent } from '../models/JoinEvent';
   styleUrls: ['./event.component.css']
 })
 export class EventComponent implements OnInit {
+
+  hostUrl = 'http://localhost:8080'
 
   currentUser;
   logInStatus: Boolean;
@@ -22,7 +27,7 @@ export class EventComponent implements OnInit {
   //to capture event, event.id
   id: string;
   eventDetails: Event;
-
+  currentUserButtonLoading: boolean;
   //to display comments, num attending
   joinUrl: string;
   joinedEvent: JoinEvent [] = [];
@@ -30,47 +35,54 @@ export class EventComponent implements OnInit {
   commentDisplay: string[] = [];
 
   //verify user to display update/delete options
-  userJoined: boolean = false;
+  userJoined: boolean;
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private eventService: EventService) {
+  constructor(private themeservice: ThemeserviceService, private activeUserService: ViewUserService, private authorize: AuthorizeService,private http: HttpClient, private route: ActivatedRoute, private router: Router, private eventService: EventService) {
     this.logInStatus = false;
-    // this.eventUrl = 'http://localhost:8080/events/event/{id}/'
-    this.joinUrl = 'http://localhost:8080/join/join/'
+    this.joinUrl = this.hostUrl + '/join/join/'
     this.eventDetails;
     this.id = this.route.snapshot.params['id'];
-
     this.joinedEvent;
     this.numJoined;
     this.commentDisplay;
-
-    this.userJoined;
+    this.currentUserButtonLoading = true;
+    this.userJoined = false;
 
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
-
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+    this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+    .subscribe((data: any) => {
+      this.currentUser = data.viewUser.userName
+      this.getUserJoined();
+      this.currentUserButtonLoading = false;
+    })
 
     console.log(this.id);
-
     this.eventService.getEvent(this.id).subscribe((response: Event) => {
       this.eventDetails = response;
       console.log(response);
     
+      this.http.get(this.joinUrl).subscribe((data: JoinEvent[]) => {
+        console.log(data);
+        this.joinedEvent = data;
+  
+        this.getNumJoined();
+        this.getComments();
+  
+      })
     })
 
     console.log(this.joinedEvent);
+  }
 
-    this.http.get(this.joinUrl).subscribe((response: JoinEvent[]) => {
-      console.log(response);
-      this.joinedEvent = response;
 
-      this.getNumJoined();
-      this.getComments();
-      this.getUserJoined();
-     
-    })
+
 
   }
 
@@ -108,22 +120,8 @@ export class EventComponent implements OnInit {
     return this.userJoined;
   }
 
-
-
-  verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
-
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
 }

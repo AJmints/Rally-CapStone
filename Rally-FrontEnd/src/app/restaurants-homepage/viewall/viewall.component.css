@@ -1,0 +1,128 @@
+.name {
+    font-family: Impact, sans-serif; 
+    color: #0097b2;
+    font-size: 30px;
+    text-align: center;
+
+}
+.logInButton {
+    background-color: #0EBB9A;
+    text-align: center;
+    color:#ffffff;
+    font-family: 'Open Sans', sans-serif;
+    font-size:20px;
+    font-weight: 500;
+    width: 125px;
+    height: 65px;
+    text-decoration: none;
+    border:none;
+  }
+  
+    button.logInButton:hover {
+      background-color: #14cfad;
+      color: #85cde3;
+    }
+  
+    button.logOutButton:hover{
+      background-color: #14cfad;
+      color: #85cde3;
+    }
+    .justify-content-end{
+      font-family: 'Open Sans', sans-serif; 
+    }
+  
+    .logOutButton {
+      background-color: #0EBB9A;
+      text-align: center;
+      color:#ffffff;
+      font-family: 'Open Sans', sans-serif;
+      font-size:20px;
+      font-weight: 500;
+      width: 125px;
+      height: 65px;
+      border: none;
+      text-decoration: none;
+    }
+  
+    span:hover {
+      color: #85CDE3;
+    }
+  
+    a:hover {
+      color: #85cde3;
+    }
+  
+    .blackcontent {
+      background-color: black;
+    }
+  
+  
+  
+  
+  
+  
+    .btn {
+      background-color: #fff;
+      border-color:  #85CDE3;
+      transition: all .7s;
+      border-radius: 0;
+    }
+  
+  
+  
+    .button2 {
+      background-color: #0d1117;
+      color:white;
+      border: 2px solid #0d1117;
+      font-size:22px;
+      padding:6px 24px;
+      text-decoration:none;
+      width: 90%;
+      box-shadow: none;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-bottom: 10px;
+  
+  }
+  
+  .button3{
+      background-color: #F9A605;
+      color:white;
+      border: 2px solid #F9A605;
+      font-size:22px;
+      padding:6px 24px;
+      text-decoration:none;
+      width: 90%;
+      box-shadow: none;
+      margin-left: 15px;
+      margin-right: 15px;
+      margin-bottom: 10px;
+  }
+  
+    input[type=text] {
+      background-color: #f6f4f3;
+    }
+    
+    input[placeholder] {
+      font-style: italic;
+    }
+  
+    #link {
+      color: black;
+      font-size: 30px;
+      margin-bottom: -5px;
+    }
+    
+  
+    .nav-link {
+      color: black;
+      font-weight: 450;
+      font-size: 15px;
+    }
+    .btn:hover {
+      color: #fff;
+      background-color:  #85CDE3;
+      border-color:  #85CDE3;
+    }
+  
+  

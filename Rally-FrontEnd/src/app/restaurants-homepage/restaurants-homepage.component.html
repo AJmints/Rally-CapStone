@@ -1,3 +1,32 @@
+
+
+<header>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+            <div class="container">
+            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+            </a>
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <div class="container">
+                    <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                    <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                    </ul>
+                </div>    
+                    
+                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+
+            </div>
+            </div>
+        </nav>
+    </div>
+  </header>
+
 <html> 
     <head>
         
@@ -5,50 +34,47 @@
 
 <body>
 
-    <form>
-        <label>Search <input type="text" name="search"></label>
-        <!-- clicking either of these will cause a form submission -->
-        <button class="nav-link" routerLink="/restaurants/search" routerLinkActive="active">Submit</button>
-     </form>
-
+   
      <br><br>
 
     <div>
-        <img src = "https://explorestlouis.com/wp-content/uploads/2020/08/Gateway-Arch-Website-Listing-2.jpg">
+        <img class="image" src = "https://explorestlouis.com/wp-content/uploads/2020/08/Gateway-Arch-Website-Listing-2.jpg">
 
     
             <div class="stl">
                 <div>
                     <!-- <img src = "https://explorestlouis.com/wp-content/uploads/2020/08/Gateway-Arch-Website-Listing-2.jpg"> -->
-                    <div class = centeredSTL><h4>Let's grub STL!!!</h4></div>
+                    <div class = "centeredSTL" ><h4>Let's grub STL!!!</h4></div>
                 </div>
             </div>
 
             <br>
 
         <div>
-            <h4>What kind of food are you in the mood for?</h4>
+            <h4  style="text-align: center">What kind of food are you in the mood for?</h4>
         </div>
 
             <br>
 
-                <div>
-                    <button class="nav-link" routerLink="/restaurants/american" routerLinkActive="active">American 🍔</button>
-                    <button class="nav-link" routerLink="/restaurants/asian" routerLinkActive="active" >Asian 🥡</button>
-                    <button class="nav-link" routerLink="/restaurants/italian" routerLinkActive="active">Italian 🍝</button>
-                    <button class="nav-link" routerLink="/restaurants/mexican" routerLinkActive="active">Mexican 🌮</button>
-                    <button class="nav-link" routerLink="/restaurants/pizza" routerLinkActive="active">Pizza 🍕</button>
+           
+
+                <div  style="text-align: center">
+                    <button class="nav-link1" routerLink="/restaurants/american" routerLinkActive="active">American 🍔</button>
+                    <button class="nav-link1" routerLink="/restaurants/asian" routerLinkActive="active" >Asian 🥡</button>
+                    <button class="nav-link1" routerLink="/restaurants/italian" routerLinkActive="active">Italian 🍝</button>
+                    <button class="nav-link1" routerLink="/restaurants/mexican" routerLinkActive="active">Mexican 🌮</button>
+                    <button class="nav-link1" routerLink="/restaurants/pizza" routerLinkActive="active">Pizza 🍕</button>
                 </div>
 
             </div>
 
             <br>
         <div class="button1">
-            <a class="button1">filter</a>
-            <a class="button1">viewall</a>  
-        </div>
-        
-            <br>
-            </body>
+            <button class="button1" routerLink="/restaurants/search" routerLinkActive="active">search</button>
+            <button class="button1" routerLink="/restaurants/viewall" routerLinkActive="active">viewall</button>  
+            <button class="button1" routerLink="/restaurants/add" routerLinkActive="active">add restaurant</button>  
 
+        </div>
+        <br>
+    </body>
 </html>

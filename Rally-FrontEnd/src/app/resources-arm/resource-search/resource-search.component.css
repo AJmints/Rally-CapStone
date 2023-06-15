@@ -1,3 +1,118 @@
+.logInButton {
+    background-color: #0EBB9A;
+    text-align: center;
+  color:#ffffff;
+  font-family: 'Open Sans', sans-serif;
+  font-size:20px;
+    font-weight: 500;
+    width: 125px;
+    height: 65px;
+    padding-top: 20px;
+  text-decoration: none;
+  }
+  
+  .logOutButton {
+    background-color: #0EBB9A;
+    text-align: center;
+  color:#ffffff;
+  font-family: 'Open Sans', sans-serif;
+  font-size:20px;
+    font-weight: 500;
+    width: 125px;
+    height: 65px;
+  text-decoration: none;
+  }
+  
+  .nav-link {
+    color: black;
+    font-weight: 450;
+    font-size: 15px;
+  }
+
+  body {
+    background: radial-gradient(#abe7dc, #ffffff 70%);
+  
+  }
+
+  .button1 {
+    background-color: #0EBB9A;
+    display: internal;
+    color:#ffffff;
+    font-family: 'Open Sans', sans-serif;
+    font-size:30px;
+    font-weight:bold;
+    text-shadow: 0.5px 0.5px 0px #000;
+     padding:15px 75px;
+    text-decoration: none;
+    float: right;
+  }
+
+
+
+
+  .btn {
+    background-color: #fff;
+    border-color:  #85CDE3;
+    transition: all .7s;
+    border-radius: 0;
+  }
+  .btn:hover {
+    color: #fff;
+    background-color:  #85CDE3;
+    border-color:  #85CDE3;
+  }
+
+  .button2 {
+    background-color: #ffffff;
+	color:#0d1117;
+    border: 2px solid #0d1117;
+	font-size:22px;
+	padding:6px 24px;
+	text-decoration:none;
+    width: 90%;
+    box-shadow: none;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+
+}
+
+.button3{
+    background-color: white;
+	color:#F9A605;
+    border: 2px solid #F9A605;
+	font-size:22px;
+	padding:6px 24px;
+	text-decoration:none;
+    width: 90%;
+    box-shadow: none;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+
+  input[type=text] {
+    background-color: #f6f4f3;
+  }
+  
+  input[placeholder] {
+    font-style: italic;
+  }
+  button.logOutButton:hover{
+    background-color: #14cfad;
+    color: #85cde3;
+  }
+  a.nav-link:hover {
+    color: #85cde3;
+  }
+  #link {
+    color: black;
+    font-size: 30px;
+    margin-bottom: -5px;
+  }
+
+/*end Jami add-ons*/
 #list_head {
     /* font-family:Verdana, Geneva, Tahoma, sans-serif; */
     font-family:Oswald, sans-serif;

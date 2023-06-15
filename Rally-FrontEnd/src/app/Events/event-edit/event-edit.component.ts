@@ -7,6 +7,9 @@ import { EventComponent } from '../event/event.component';
 import { EventService } from '../services/event.service';
 import { EventDTO } from '../models/DTO/EventDTO';
 import { NgForm } from '@angular/forms';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
 
 @Component({
   selector: 'app-event-edit',
@@ -14,6 +17,8 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./event-edit.component.css']
 })
 export class EventEditComponent implements OnInit {
+
+  hostUrl = 'http://localhost:8080'
 
   currentUser;
   logInStatus: Boolean;
@@ -30,11 +35,11 @@ export class EventEditComponent implements OnInit {
 
 
 
-  constructor(private http: HttpClient, private route: ActivatedRoute, private router: Router, private eventService: EventService) {
+  constructor(private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private http: HttpClient, private route: ActivatedRoute, private router: Router, private eventService: EventService) {
  this.logInStatus = false;
-    this.getEventUrl = 'http://localhost:8080/events/event'
-    this.updateEventUrl = 'http://localhost:8080/events/edit/event'
-    this.deleteEventUrl = 'http://localhost:8080/events/edit/delete'
+    this.getEventUrl = this.hostUrl + '/events/event'
+    this.updateEventUrl = this.hostUrl + '/events/edit/event'
+    this.deleteEventUrl = this.hostUrl + '/events/edit/delete'
 
     this.event;
     this.id = this.route.snapshot.params['id'];
@@ -42,7 +47,15 @@ export class EventEditComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+    this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+    .subscribe((data: any) => {
+      this.currentUser = data.viewUser.userName
+    })
+  }
 
     console.log(this.id);
 
@@ -60,7 +73,7 @@ updateEvent(eventInformation: NgForm) {
 
   let updateEvent: EventDTO = {
     id: this.eventId,
-    userName: localStorage.getItem("userName"),
+    userName: this.currentUser,
     eventHost: eventInformation.value.eventHost,
     contactEmail: eventInformation.value.contactEmail,
     eventTitle: eventInformation.value.eventTitle, 
@@ -90,30 +103,15 @@ deleteEvent() {
   if(confirm("Are you sure you want to delete this event?")) {
     this.eventService.deleteEvent(this.id).subscribe(data => {
       console.log(data);
+      this.router.navigate(["/events"])
     })
-    this.router.navigate(["/events"])
-  .then(() => {
-    window.location.reload();
-  });
   }
  
 }
 
 
-    verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
-
   logOut() {
-    // localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
 }

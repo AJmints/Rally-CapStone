@@ -1,18 +1,31 @@
+<header>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+            <div class="container">
+            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+            </a>
+            <div class="navbar-collapse" id="navbarSupportedContent">
+                <div class="container">
+                    <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                    <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                    <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                    </ul>
+                </div>    
+                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+            </div>
+            </div>
+        </nav>
+    </div>
+  </header>
 <body class="background container">
   
   <!-- login status -->
-  <div *ngIf="logInStatus; else notLoggedIn">
-        
-    <div style="text-align: right;">
-        <p class="text-black">Logged in as: {{currentUser}}  <button (click)="logOut()"> Log Out?</button></p>
-    </div>
 
-</div>
-<ng-template #notLoggedIn>
-
-    <p class="text-black">User is not logged in. </p>
-    <a routerLink="/login" routerLinkActive="active" (click)="logInStatus = false">Login</a>
-</ng-template>
 
 <!-- Banner -->
 <div class="green" style="text-align:center"><h1>Search Services</h1></div>

@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Resource } from '../models/resource'
+import { Resource } from '../models/Resource';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+
 
 
 @Component({
@@ -10,6 +12,8 @@ import { Resource } from '../models/resource'
   styleUrls: ['./resource-search.component.css']
 })
 export class ResourceSearchComponent implements OnInit {
+
+  private hostUrl = 'http://localhost:8080'
   
   isLoading: boolean = true;
 
@@ -28,29 +32,26 @@ export class ResourceSearchComponent implements OnInit {
   
   
   
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private authorize: AuthorizeService, private http: HttpClient, private router: Router) {
     this.logInStatus = false;
-    this.resourceUrl = 'http://localhost:8080/resources/resources/'
+    this.resourceUrl = this.hostUrl + '/resources/resources/'
     this.resourceList;
     this.filteredResources;
 
 
    }
   ngOnInit(): void {
-    // this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+
     this.http.get(this.resourceUrl).subscribe((response: Resource[]) => {
       console.log(response);
       this.resourceList = response;
       this.allResources();
     })
   }
-  // verifyLoggedIn(){
-  //   if (localStorage.getItem('userName') !=null) {
-  //     this.currentUser = localStorage.getItem('userName');
-  //     this.logInStatus = true;
-  //   }
-  // }
-  //FILTER
+  
 
   filter(string: string) {
     this.filteredResources.splice(0);
@@ -78,10 +79,8 @@ export class ResourceSearchComponent implements OnInit {
     return this.viewAll();
   }
 
+  logOut() {
+    this.authorize.logOut()
+  }
 
-  // logOut() {
-  //   localStorage.clear();
-  //   console.log(localStorage.getItem('userName'))
-  //   this.logInStatus=false;
-  // }
 }

@@ -6,6 +6,9 @@ import { ViewService } from '../models/ServiceGet';
 import { ViewId } from '../models/ServiceGet';
 import { UserEntity } from 'src/app/user-profile-arm/models/UserEntity';
 import { ServiceDTO } from '../models/Service';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 
 
 @Component({
@@ -14,6 +17,8 @@ import { ServiceDTO } from '../models/Service';
   styleUrls: ['./service-item.component.css']
 })
 export class ServiceItemComponent implements OnInit {
+
+  private hostUrl = 'http://localhost:8080'
 
   userList: UserEntity[]; 
 
@@ -24,7 +29,7 @@ export class ServiceItemComponent implements OnInit {
   servicesList: Service[];
   serviceItem: Service;
   delItem: ServiceDTO[];
-
+  loading: boolean;
   // ids: string;
 
   ids: string;
@@ -50,13 +55,22 @@ export class ServiceItemComponent implements OnInit {
   timeArr: String[] = [];
   userNameArr: string[] = [];
 
-  constructor(private http: HttpClient, private router: Router, private findService: ViewService, private route: ActivatedRoute, private findId: ViewId) {
+  constructor(private authorize: AuthorizeService,private http: HttpClient, private router: Router, private findService: ViewService, private route: ActivatedRoute, private findId: ViewId, private themeservice: ThemeserviceService, private activeUserService: ViewUserService) {
     this.logInStatus = false;
-    this.userUrl = 'http://localhost:8080/services/delete';
+    this.loading = true;
+    this.userUrl = this.hostUrl + '/services/delete';
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+
+  this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+  .subscribe((data: any) => {
+    this.loading = false;
+    this.currentUser = data.viewUser.userName
+  })
 
     this.findService.getService().subscribe((response: Service[]) => {
       this.servicesList = response;
@@ -132,18 +146,10 @@ export class ServiceItemComponent implements OnInit {
 
     }
 
-  verifyLoggedIn() {
 
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-  }
 
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
   deleteItem() {

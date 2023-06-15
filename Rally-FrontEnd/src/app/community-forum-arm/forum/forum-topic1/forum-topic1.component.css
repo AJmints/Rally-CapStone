@@ -1,36 +1,38 @@
 .logInButton {
-    background-color: #0EBB9A;
-    text-align: center;
+  background-color: #0EBB9A;
+  text-align: center;
   color:#ffffff;
   font-family: 'Open Sans', sans-serif;
   font-size:20px;
-    font-weight: 500;
-    width: 125px;
-    height: 65px;
-    padding-top: 20px;
+  font-weight: 500;
+  width: 125px;
+  height: 65px;
   text-decoration: none;
-    float: right;
+  border:none;
+}
+  button.logInButton:hover {
+    background-color: #14cfad;
+    color: #85cde3;
+  }
+  button.logOutButton:hover{
+    background-color: #14cfad;
+    color: #85cde3;
   }
   .justify-content-end{
     font-family: 'Open Sans', sans-serif; 
-    position: relative;
-    float:left;
   }
-  .centering {
-    position: relative;
-    text-align: center;
-    float: right;
-  }
+
   .logOutButton {
     background-color: #0EBB9A;
     text-align: center;
-  color:#ffffff;
-  font-family: 'Open Sans', sans-serif;
-  font-size:20px;
+    color:#ffffff;
+    font-family: 'Open Sans', sans-serif;
+    font-size:20px;
     font-weight: 500;
     width: 125px;
     height: 65px;
-  text-decoration: none;
+    border: none;
+    text-decoration: none;
   }
   span:hover {
     color: #85CDE3;
@@ -59,10 +61,6 @@
     background-image: url('../images/black-image.png');
     position: relative;
     min-height:100vh;
-  }
-  .blackheader{
-    background-image: url('../images/black-image.png');
-    position: relative;
   }
   .button1 {
     background-color: #0EBB9A;
@@ -138,6 +136,11 @@
     font-size: 30px;
     margin-bottom: -5px;
   }
+  .nav-link {
+    color: black;
+    font-weight: 450;
+    font-size: 15px;
+  }
   /* jami addons */
 .black {
     background-image: url('../images/black-image.png');
@@ -152,6 +155,10 @@
     left: 0; 
     right: 0;
     min-height: 900px;
+}
+.blackbody1 {
+  background-image: url('../images/black-image.png');
+  position: relative;
 }
 .white-theme {
     color:black;

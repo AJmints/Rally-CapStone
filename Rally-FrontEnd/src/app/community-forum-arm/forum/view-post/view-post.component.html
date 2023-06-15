@@ -14,7 +14,7 @@
                         <ul class="nav justify-content-end">
                         <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="blackcolor">EVENTS</span></a></li>
                         <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="blackcolor">FORUMS</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="blackcolor">EATS</span></a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active"><span class="blackcolor">EATS</span></a></li>
                         <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="blackcolor">SERVICES</span></a></li>
                         <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="blackcolor">RESOURCES</span></a></li>
                         <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="blackcolor">MY PROFILE</span></a></li>
@@ -83,9 +83,9 @@
         <ng-template #editPostDescription>
             <form #editPostAttempt="ngForm" (ngSubmit)="editPostWithNewDescription(editPostAttempt)">
                 <div class="center">
-                <input style="position:relative;" class="form-control" type="text" name="newDescription" [(ngModel)]="postObject.description" required ngModel>
+                <input class="form-control" type="text" name="newDescription" [(ngModel)]="postObject.description" required ngModel>
                 <input style="position:relative;" type="submit" value="Submit">
-                <button (click)="cancelPostDescription()">Cancel</button>
+                <button style="position:relative;" (click)="cancelPostDescription()">Cancel</button>
                 <div *ngIf="replyTooLong">
                     <p style="color:red;">Description is too long, please keep it under 245 characters.</p>
                 </div>
@@ -175,7 +175,7 @@
                         <ul class="nav justify-content-end">
                             <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="beigecolor">EVENTS</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="beigecolor">FORUMS</span></a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="beigecolor">EATS</span></a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active"><span class="beigecolor">EATS</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="beigecolor">SERVICES</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="beigecolor">RESOURCES</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="beigecolor">MY PROFILE</span></a></li>

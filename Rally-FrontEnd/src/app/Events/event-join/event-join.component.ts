@@ -7,6 +7,9 @@ import { EventService } from '../services/event.service';
 import { Event } from '../models/event';
 import { JoinEvent } from '../models/JoinEvent';
 import { JoinEventDTO } from '../models/DTO/JoinEventDTO';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 @Component({
   selector: 'app-event-join',
   templateUrl: './event-join.component.html',
@@ -14,7 +17,9 @@ import { JoinEventDTO } from '../models/DTO/JoinEventDTO';
 })
 export class EventJoinComponent implements OnInit {
 
-  currentUser: String;
+  hostUrl = 'http://localhost:8080'
+
+  currentUser: string;
   logInStatus: Boolean;
 
   private getEventUrl: string;
@@ -26,12 +31,12 @@ export class EventJoinComponent implements OnInit {
   event: Event;
   eventId: number;
 
-  constructor(private http: HttpClient, private router: Router,private route: ActivatedRoute, private eventService: EventService) { 
+  constructor(private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private http: HttpClient, private router: Router,private route: ActivatedRoute, private eventService: EventService) { 
 
     this.logInStatus = false;
 
-    this.getEventUrl = 'http://localhost:8080/events/event'
-    this.joinUrl = 'http://localhost:8080/join/event'
+    this.getEventUrl = this.hostUrl + '/events/event'
+    this.joinUrl = this.hostUrl + '/join/event'
    
     this.event;
     this.id = this.route.snapshot.params['id'];
@@ -42,9 +47,15 @@ export class EventJoinComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.verifyLoggedIn();
-   
-
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+  this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+  .subscribe((data: any) => {
+    this.currentUser = data.viewUser.userName
+  })
+}
     console.log(this.id);
 
     this.eventService.getEvent(this.id).subscribe((response: Event) => {
@@ -55,21 +66,10 @@ export class EventJoinComponent implements OnInit {
 
   }
 
-  verifyLoggedIn() {
 
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
 
   logOut() {
-    // localStorage.clear();
-    localStorage.removeItem('userName');
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
 //   getIdNum(str: string) {
@@ -81,7 +81,7 @@ export class EventJoinComponent implements OnInit {
 joinEvent(joinEventInformation: NgForm) {
   let joinEvent: JoinEventDTO = {
     id: 0,
-    userName: localStorage.getItem("userName"),
+    userName: this.currentUser,
     event: this.event,
     attending: joinEventInformation.value.attending,
     contactEmail: joinEventInformation.value.contactEmail,

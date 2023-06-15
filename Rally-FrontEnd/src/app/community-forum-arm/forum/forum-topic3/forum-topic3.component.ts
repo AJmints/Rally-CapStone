@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ThemeserviceService } from '../../../services/themeservice.service';
 import { NgForm } from '@angular/forms';
 import { ForumPostDTO } from '../../models/ForumPostDTO';
-import { UserEntity } from 'src/app/user-profile-arm/models/UserEntity';
 import { ForumPost } from '../../models/ForumPost';
 import { map } from 'rxjs/operators';
 import { ReplyDTO } from '../../models/ReplyDTO';
@@ -17,6 +16,7 @@ import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/
   styleUrls: ['./forum-topic3.component.css']
 })
 export class ForumTopic3Component implements OnInit {
+  hostUrl = 'http://localhost:8080'
   forumTopic: string;
   currentUser: string;
   logInStatus: Boolean;
@@ -73,6 +73,9 @@ export class ForumTopic3Component implements OnInit {
   login(){
     this.router.navigate(["/login"]);
   }
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
+  }
   createPost(postInformation: NgForm){
     this.createPostBoolean = false;
     let postDetails: ForumPostDTO = {
@@ -81,7 +84,7 @@ export class ForumTopic3Component implements OnInit {
       username: this.currentUser,
       category: this.forumTopic
     }
-    this.http.post(`http://localhost:8080/Posts`, postDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + `/Posts`, postDetails).subscribe((res) => {
       this.getPosts();
   });
   }
@@ -111,7 +114,7 @@ Dark(){
       description: "",
       id: postId
     }
-    this.http.post('http://localhost:8080/LikePost', likeDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + '/LikePost', likeDetails).subscribe((res) => {
       this.getPosts();
     });
 

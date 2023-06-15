@@ -22,7 +22,13 @@
    height: 65px;
    text-decoration: none;
 }
-
+a.nav-link:hover {
+   color: #85cde3;
+ }
+button.logOutButton:hover{
+   background-color: #14cfad;
+   color: #85cde3;
+ }
 .nav-link {
    color: black;
    font-weight: 450;

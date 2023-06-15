@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { StorageService } from 'src/app/security/security-service/storage-service.service';
 import { ThemeserviceService } from 'src/app/services/themeservice.service';
 import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 
@@ -12,11 +13,16 @@ import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/
   styleUrls: ['./forum.component.css']
 })
 export class ForumComponent implements OnInit {
+
+private hostUrl = 'http://localhost:8080'
 currentUser: string;
 logInStatus: boolean;
 darktheme: boolean;
 loginLoading: boolean;
-constructor(private http: HttpClient, private router: Router, private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService) {
+userProfilePics: any[] = [];
+dbImage: any;
+postResponse: any;
+constructor(private http: HttpClient, private router: Router, private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private storageService: StorageService,) {
   this.logInStatus = false;
   this.darktheme = false;
   this.loginLoading = true;
@@ -46,6 +52,15 @@ ngOnInit(): void {
     this.loginLoading = false;
 }
 
+this.http.get( this.hostUrl + '/user/userProfileImage/' + this.themeservice.getUserName()).subscribe((response: any) => {
+  if (response.message) {
+    return;
+  } else {
+    this.postResponse = response;
+    this.dbImage = 'data:image/jpeg;base64,' + this.postResponse.image;
+  }
+})
+
   this.checkTheme();
 }
 checkTheme(){
@@ -74,4 +89,7 @@ async Search(searchInformation: NgForm){
   this.router.navigate(["/forum/search"]);
 }
 
+redirectToLogIn(){
+  this.router.navigate(["/login"]);
+}
 }

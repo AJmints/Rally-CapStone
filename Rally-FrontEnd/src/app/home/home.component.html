@@ -1,47 +1,50 @@
-<!-- <!doctype html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>homepage</title>
-      </head> -->
+      </head>
 
+<body>
 
-<header>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
-            <div class="container">
-            <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
-                <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <header>
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
                 <div class="container">
-                    <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
-                    <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
-                    <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
-                    </ul>
-                </div>    
-                
-                <div *ngIf="logInStatus; else notLoggedIn">
-                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                </a>
+                <div class="navbar-collapse" id="navbarSupportedContent">
+                    <div class="container">
+                        <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'montserrat', sans-serif;">
+                        <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                        </ul>
+                    </div>             
+                    <div *ngIf="!loginLoading">
+                        <div *ngIf="logInStatus; else notLoggedIn">
+                            <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                        </div>
+        
+                            <ng-template #notLoggedIn>
+                                <button (click)="redirectToLogIn()" class="logInButton">LOG IN</button>
+                            </ng-template>
+                        </div>
                 </div>
+                </div>
+            </nav>
+        </div>
+    </header>
 
-                    <ng-template #notLoggedIn>
-                        <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                    </ng-template>
-            </div>
-            </div>
-        </nav>
-    </div>
-  </header>
 
-    <body style="margin-top: 120px;">
         <div class="container">
-          
+            <br>
+            <br>
             <div class="row">
                 <img src="/assets/home-assets/rally_title.jpg" class="img-fluid">
             </div>
@@ -67,16 +70,17 @@
             <br>
             <br>
             <br>
+            <!-- <br>
+            <br> -->
 
-                <div class="container" style="width: 85%">
-            
+            <div class="container">
 
-                    <div class="row row-cols-1 row-cols-md-3 g-5">
+                <div class="row row-cols-1 row-cols-md-3 g-5">
                     <div class="col">
-                          <div class="card h-100">
+                    <div class="card h-100">
                         <img src="/assets/home-assets/events.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a  routerLink="/events" routerLinkActive="active">Events</a></p>
+                        <p class="Rp2">Events</p>
                         <p class="Rp3">Create or join events to connect with neighbors.</p>
                         </div>
                     </div>
@@ -85,7 +89,7 @@
                     <div class="card h-100">
                         <img src="/assets/home-assets/forum.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a routerLink="/forum" routerLinkActive="active">Forums</a></p>
+                        <p class="Rp2">Forums</p>
                         <p class="Rp3">Ask. Share. Start discussions that matter.</p>
                         </div>
                     </div>
@@ -94,24 +98,22 @@
                     <div class="card h-100">
                         <img src="/assets/home-assets/eats.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a routerLink="/services" routerLinkActive="active">Eats</a></p>
+                        <p class="Rp2">Eats</p>
                         <p class="Rp3">Discover & review our next favorite dish.</p>
                         </div>
                     </div>
                     </div>
                 </div>
 
-
                 <br>
                 <br>
-
 
                 <div class="row row-cols-1 row-cols-md-3 g-5">
                     <div class="col">
                     <div class="card h-100">
                         <img src="/assets/home-assets/services.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a routerLink="/services" routerLinkActive="active">Services</a></p>
+                        <p class="Rp2">Services</p>
                         <p class="Rp3">Request or offer a service to provide.</p>
                         </div>
                     </div>
@@ -120,7 +122,7 @@
                     <div class="card h-100">
                         <img src="/assets/home-assets/resources.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a routerLink="/resources" routerLinkActive="active">Resources</a></p>
+                        <p class="Rp2">Resources</p>
                         <p class="Rp3">Find valuable info & helpful links.</p>
                         </div>
                     </div>
@@ -129,7 +131,7 @@
                     <div class="card h-100">
                         <img src="/assets/home-assets/user profiles.jpg" class="card-img-top" alt="...">
                         <div class="card-body">
-                        <p class="Rp2"><a routerLink="/myProfile" routerLinkActive="active">User Profiles</a></p>
+                        <p class="Rp2">User Profiles</p>
                         <p class="Rp3">Track comments, events & activity.</p>
                         </div>
                     </div>
@@ -157,6 +159,6 @@
 
 
 </body>
-<!-- </html> -->
+</html>
 
 

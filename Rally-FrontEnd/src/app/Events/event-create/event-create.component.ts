@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventDTO } from '../models/DTO/EventDTO';
 import { NgForm } from '@angular/forms';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 
 
 @Component({
@@ -12,39 +15,36 @@ import { NgForm } from '@angular/forms';
 })
 export class EventCreateComponent implements OnInit {
 
-  currentUser: String;
+  hostUrl = 'http://localhost:8080'
+
+  currentUser: string;
   logInStatus: Boolean;
   private eventUrl: string;
 
 
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private http: HttpClient, private router: Router) {
     this.logInStatus = false;
-    this.eventUrl = 'http://localhost:8080/events/create'
+    this.eventUrl = this.hostUrl + '/events/create'
 
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+    this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+    .subscribe((data: any) => {
+      this.currentUser = data.viewUser.userName
+    })
+  }
   }
 
-  verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
 
   logOut() {
-    // localStorage.clear();
-    localStorage.removeItem('userName');
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
-
   getIdNum(str: string) {
     let num: number = parseInt(str);
     return num;
@@ -54,7 +54,7 @@ export class EventCreateComponent implements OnInit {
   registerNewEvent(eventInformation: NgForm) {
     let createNewEvent: EventDTO = {
       id: 0,
-      userName: localStorage.getItem("userName"),
+      userName: this.currentUser,
       eventHost: eventInformation.value.eventHost,
       contactEmail: eventInformation.value.contactEmail,
       eventTitle: eventInformation.value.eventTitle, 
@@ -68,14 +68,10 @@ export class EventCreateComponent implements OnInit {
     console.log(createNewEvent);
     this.http.post(this.eventUrl, createNewEvent).subscribe((res) => {
       console.log(res)
+    this.router.navigate(['/events'])
     });
 
     // eventInformation.reset();
-
-    this.router.navigate(['/events'])
-  .then(() => {
-    window.location.reload();
-  });
    
 
   }

@@ -6,102 +6,98 @@
         <title>join-edit</title>
       </head> -->
 
-        <header>
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+      <header>
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+                <div class="container">
+                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                </a>
+                <div class="navbar-collapse" id="navbarSupportedContent">
                     <div class="container">
-                    <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
-                        <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
-                    </a>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="container">
-                            <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
-                            <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
-                            </ul>
-                        </div>    
-                        
-                        <div *ngIf="logInStatus; else notLoggedIn">
-                            <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                        </div>
-        
-                            <ng-template #notLoggedIn>
-                                <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                            </ng-template>
-                    </div>
-                    </div>
-                </nav>
-            </div>
-          </header>
+                        <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                        <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                        </ul>
+                    </div>    
+                    
+           
+                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+             
+                </div>
+                </div>
+            </nav>
+        </div>
+      </header>
 
 
 <body style="margin-top: 120px;">
-    <div class="container">
+<div class="container">
 
-      
-
-
-            <div id="list_head">
-                <p>Update:  {{event?.eventTitle}}</p> 
-            </div>
-        
-            <br>
-            <br>
-                             
-                <form #joinEventInformation="ngForm" (ngSubmit)="updateJoin(joinEventInformation)">
-
-                    <div class="row">
-                        <div class="col-5">
-
-                            <input type="hidden" id="id" name="joinEventId" value="join.id" ngModel>
-                            
-                            <div class="mb-3">
-                            <label class="form-label" for="attending">name</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="join.attending" id="attending" name="attending" ngModel>
-                             
-                            <br>
-                            <label class="form-label">email</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="join.contactEmail" id="email" name="contactEmail" ngModel>
-            
-                            <br>
-                            <label class="form-label">number attending</label><br>
-                            <input class="form-control form-control-lg" type="number" required [(ngModel)]="join.numAttending" id="numAttending" name="numAttending" ngModel>
-            
-                            <br>    
-                            <label class="form-label">add comment (optional)</label><br>
-                            <textarea class="form-control" rows="5" [(ngModel)]="join.comment" id=comment name="comment" ngModel></textarea>
-                                   
-                            <br>
-                            <br>
-                           
-                            <button [disabled]="joinEventInformation.invalid" type="submit" id="join_btn">SUBMIT</button>
-                            <br>
-                                <div *ngIf="joinEventInformation.invalid && joinEventInformation.touched" class="alert alert-danger">
-                                    Make sure you've filled out the whole form!
-                                </div>
+  
 
 
-                            </div>
-                        </div>
-                    </div>
- 
-                    </form>
-               
+        <div id="list_head">
+            <p>Update:  {{event?.eventTitle}}</p> 
+        </div>
+    
+        <br>
+        <br>
+                         
+            <form #joinEventInformation="ngForm" (ngSubmit)="updateJoin(joinEventInformation)">
+
                 <div class="row">
-
-
                     <div class="col-5">
 
-                        <button type="button" (click)="deleteJoin()" id="edit_btn" style="background-color: #C03E24; float: left;">DELETE</button>
-                    </div>
+                        <input type="hidden" id="id" name="joinEventId" value="join.id" ngModel>
+                        
+                        <div class="mb-3">
+                        <label class="form-label" for="attending">name</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="join.attending" id="attending" name="attending" ngModel>
+                         
+                        <br>
+                        <label class="form-label">email</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="join.contactEmail" id="email" name="contactEmail" ngModel>
+        
+                        <br>
+                        <label class="form-label">number attending</label><br>
+                        <input class="form-control form-control-lg" type="number" required [(ngModel)]="join.numAttending" id="numAttending" name="numAttending" ngModel>
+        
+                        <br>    
+                        <label class="form-label">add comment (optional)</label><br>
+                        <textarea class="form-control" rows="5" [(ngModel)]="join.comment" id=comment name="comment" ngModel></textarea>
+                               
+                        <br>
+                        <br>
+                       
+                        <button [disabled]="joinEventInformation.invalid" type="submit" id="join_btn">SUBMIT</button>
+                        <br>
+                            <div *ngIf="joinEventInformation.invalid && joinEventInformation.touched" class="alert alert-danger">
+                                Make sure you've filled out the whole form!
+                            </div>
 
+
+                        </div>
+                    </div>
                 </div>
 
+                </form>
+           
+            <div class="row">
 
-    </div>
+
+                <div class="col-5">
+
+                    <button type="button" (click)="deleteJoin()" id="edit_btn" style="background-color: #C03E24; float: left;">DELETE</button>
+                </div>
+
+            </div>
+
+
+</div>
 </body>
 <!-- </html> -->

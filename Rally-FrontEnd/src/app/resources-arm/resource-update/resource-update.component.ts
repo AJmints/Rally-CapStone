@@ -1,20 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Resource } from '../models/resource';
-import { ResourceComponent } from '../resource/resource.component';
 import { ResourceDTO } from '../models/ResourceDTO';
 import { NgForm } from '@angular/forms';
 import { ResourceService } from '../resource-filter/resource-service';
 import { Router } from '@angular/router';
+import { Resource } from '../models/Resource';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
 
 @Component({
   selector: 'app-resource-update',
   templateUrl: './resource-update.component.html',
   styleUrls: ['./resource-update.component.css']
 })
-export class ResourceUpdateComponent implements OnInit {
+export class ResourceUpdateComponent implements OnInit {   
 
+  private hostUrl = 'http://localhost:8080'
   currentUser;
   logInStatus: Boolean;
 
@@ -28,16 +29,18 @@ export class ResourceUpdateComponent implements OnInit {
 
 
 
- constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private resourceService: ResourceService) {
+ constructor(private authorize: AuthorizeService, private http: HttpClient, private router: Router, private route: ActivatedRoute, private resourceService: ResourceService) {
     this.logInStatus = false;
-    this.getResourceUrl = 'http://localhost:8080/resources/resource'
-    this.updateResourceUrl = 'http://localhost:8080/resources/update/resource'
+    this.getResourceUrl = this.hostUrl + '/resources/resource'
+    this.updateResourceUrl = this.hostUrl + '/resources/update/resource'
     this.resource;
     this.id = this.route.snapshot.params['id'];
    }
 
 ngOnInit(): void {
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+        this.router.navigate(['/login'])
+    }
      console.log(this.id);
 
     this.resourceService.getResource(this.id).subscribe((response: Resource) => {
@@ -110,21 +113,10 @@ this.router.navigate(['/resources']).then(()=>{
  }
 
 
-    verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
 
 logOut() {
-    // localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
-  }
+    this.authorize.logOut()
+  }
 categories = ["Athletics", "Arts", "Business", "Civic", "Education", "Entertainment", "Fitness", "Hospitality", "Medical", "Park", "Religious", "Retail"];
   categoryModel = {category: this.categories[0]}
 

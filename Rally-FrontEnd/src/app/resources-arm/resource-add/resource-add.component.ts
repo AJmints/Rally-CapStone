@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Resource } from '../models/resource';
 import { NgForm } from '@angular/forms';
 import { ResourceDTO } from '../models/ResourceDTO';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
 
 @Component({
   selector: 'app-resource-add',
@@ -11,32 +11,30 @@ import { ResourceDTO } from '../models/ResourceDTO';
   styleUrls: ['./resource-add.component.css']
 })
 export class ResourceAddComponent implements OnInit {
+
+  private hostUrl = 'http://localhost:8080'
+
   currentUser: String;
   logInStatus: Boolean;
   private userUrl: string;
   private resourceUrl: string;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private authorize: AuthorizeService, private http: HttpClient, private router: Router) {
     this.logInStatus = false;
-    this.resourceUrl = 'http://localhost:8080/resources/add'
+    this.resourceUrl = this.hostUrl + '/resources/add'
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
   }
-  verifyLoggedIn(){
-    if (localStorage.getItem('userName') !=null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
   }
+
 
   
   
   logOut() {
-    //localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus=false;
+    this.authorize.logOut()
   }
 //Try
   categories = ["Athletics", "Arts", "Business", "Civic", "Education", "Entertainment", "Fitness", "Hospitality", "Medical", "Park", "Religious", "Retail"];

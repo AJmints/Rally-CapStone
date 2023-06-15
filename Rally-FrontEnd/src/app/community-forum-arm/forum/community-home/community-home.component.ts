@@ -3,18 +3,19 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemeserviceService } from 'src/app/services/themeservice.service';
-import { map } from 'rxjs/operators';
-import { ForumPost } from '../../models/ForumPost';
 import { ReplyDTO } from '../../models/ReplyDTO';
 import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
-import { ForumPostDTO } from '../../models/ForumPostDTO';
 import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
+import { ForumPostDTO } from '../../models/ForumPostDTO';
 @Component({
   selector: 'app-community-home',
   templateUrl: './community-home.component.html',
   styleUrls: ['./community-home.component.css']
 })
 export class CommunityHomeComponent implements OnInit {
+
+  hostUrl = 'http://localhost:8080'
+
   forumTopic: string;
   currentUser: string;
   logInStatus: Boolean;
@@ -24,7 +25,9 @@ export class CommunityHomeComponent implements OnInit {
   createPostBoolean: boolean;
   userLiked: boolean;
   loginLoading: boolean;
-  constructor(private http: HttpClient, private router: Router, private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService) {
+  dbImage: any;
+  postResponse: any;
+  constructor(private http: HttpClient, private router: Router,  private authorize: AuthorizeService, private themeservice: ThemeserviceService, private activeUserService: ViewUserService) {
     this.logInStatus = false;
     this.createPostBoolean = false;
     this.darktheme = false;
@@ -57,32 +60,43 @@ export class CommunityHomeComponent implements OnInit {
       this.logInStatus = false;
       this.loginLoading = false;
   }
+  this.http.get( this.hostUrl + '/user/userProfileImage/' + this.themeservice.getUserName()).subscribe((response: any) => {
+  if (response.message) {
+    return;
+  } else {
+    this.postResponse = response;
+    this.dbImage = 'data:image/jpeg;base64,' + this.postResponse.image;
+  }
+})
     this.checkTheme();
     this.getPosts();
-  }
-  login(){
-    this.router.navigate(["/login"]);
   }
   checkTheme(){
       if (localStorage.getItem('theme') == 'dark'){
           this.Dark();
       }
   }
+  login(){
+    this.router.navigate(["/login"]);
+  }
   createPostButton(){
       this.createPostBoolean = true;
   }
 
   createPost(postInformation: NgForm){
-    this.createPostBoolean = false;
-    let postDetails: ForumPostDTO = {
-      title: postInformation.value.title,
-      description: postInformation.value.description,
-      username: this.currentUser,
-      category: this.forumTopic
-    }
-    this.http.post(`http://localhost:8080/Posts`, postDetails).subscribe((res) => {
-      this.getPosts();
-  });
+      this.createPostBoolean = false;
+      let postDetails: ForumPostDTO = {
+        title: postInformation.value.title,
+        description: postInformation.value.description,
+        username: this.currentUser,
+        category: this.forumTopic
+      }
+      this.http.post( this.hostUrl + `/Posts`, postDetails).subscribe((res) => {
+        this.getPosts();
+    });
+  }
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
   }
   getPosts(){
     this.themeservice.getForumTopicPosts(this.forumTopic).subscribe((posts) =>{
@@ -112,7 +126,7 @@ Dark(){
       description: "",
       id: postId
     }
-    this.http.post('http://localhost:8080/LikePost', likeDetails).subscribe((res) => {
+    this.http.post( this.hostUrl + '/LikePost', likeDetails).subscribe((res) => {
       console.log(res)
       this.getPosts();
     });

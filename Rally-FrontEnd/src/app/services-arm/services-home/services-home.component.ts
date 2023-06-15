@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
 
 @Component({
   selector: 'app-services-home',
@@ -11,12 +12,14 @@ export class ServicesHomeComponent implements OnInit {
   currentUser;
   logInStatus: Boolean;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private authorize: AuthorizeService,private http: HttpClient, private router: Router) {
     this.logInStatus = false;
    }
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
   }
 
   verifyLoggedIn() {
@@ -29,9 +32,7 @@ export class ServicesHomeComponent implements OnInit {
   }
 
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
 }

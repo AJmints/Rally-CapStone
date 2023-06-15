@@ -11,6 +11,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class ThemeserviceService {
+
+  private hostUrl = 'http://localhost:8080'
+
   testArray1: ForumPost[];
   constructor(private http: HttpClient, private cookieService: CookieService,
     private authorize: AuthorizeService,
@@ -38,13 +41,13 @@ createAPost(postInfo: NgForm, forumTopic: string){
     username: localStorage.getItem('userName'),
     category: forumTopic
   }
-  this.http.post(`http://localhost:8080/Posts`, postDetails).subscribe((res) => {
+  this.http.post( this.hostUrl + `/Posts`, postDetails).subscribe((res) => {
     console.log(res)
 });
 window.location.reload();
 }
 getForumTopicPosts(forumTopic: string){
-  return this.http.get<{[key: string]: ForumPost}>(`http://localhost:8080/Posts`).pipe(map((res) => {
+  return this.http.get<{[key: string]: ForumPost}>( this.hostUrl + `/Posts`).pipe(map((res) => {
     const posts = [];
     for(const key in res){
       if (res[key].category == forumTopic){
@@ -60,7 +63,7 @@ sortPosts(posts: ForumPost[]){
   })
 }
 getAllForumPosts(){
-  return this.http.get<{[key: string]: ForumPost}>('http://localhost:8080/Posts').pipe(map((res) => {
+  return this.http.get<{[key: string]: ForumPost}>( this.hostUrl + '/Posts').pipe(map((res) => {
     const posts = [];
     for(const key in res){
           posts.push({...res[key]})
@@ -79,7 +82,7 @@ searchPosts(posts: ForumPost[]){
     return sortedPosts;
 }
 testPost = async () => {
-  const resp = await fetch('http://localhost:8080/Posts');
+  const resp = await fetch( this.hostUrl + '/Posts');
   const data = await resp.json();
   let newArray = data;
   return newArray

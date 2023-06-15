@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ThemeserviceService } from '../services/themeservice.service';
+import { ViewUserService } from '../user-profile-arm/user-profile/services/view-user.service';
+import { AuthorizeService } from '../security/security-service/authorize.service';
 
 @Component({
   selector: 'app-home',
@@ -6,38 +10,45 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-  isLoading: boolean = true;
-
-  //login 
-  currentUser;
-  logInStatus: Boolean;
-
-  constructor() {
-
-  this.logInStatus = false;
-
-   }
+  logInStatus: boolean;
+  loginLoading: boolean;
+  currentUser: string;
+  constructor(private router: Router, private themeservice: ThemeserviceService, private activeUserService: ViewUserService, private authorize: AuthorizeService) { 
+    this.logInStatus = false;
+    this.loginLoading = true;
+  }
+  
 
   ngOnInit(): void {
-    this.verifyLoggedIn();
 
+    if (this.authorize.isloggedIn() === true) {
+      
+      /* Get all information relevent to user */
+      this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+      .subscribe((data: any) => {
+        this.logInStatus = true;
+        this.currentUser = data.viewUser.userName
+        this.loginLoading = false;
+      },  err => {
+        if (err.status === 500) {
+          this.logInStatus = false;
+          this.currentUser = null;
+          this.themeservice.logOut();
+          this.loginLoading = false;
+        }
+      })
   }
-
-  verifyLoggedIn() {
-
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
+    else {
+      this.themeservice.logOut();
+      this.logInStatus = false;
+      this.loginLoading = false;
   }
-
+  }
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
+  }
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
     this.logInStatus = false;
+    this.themeservice.logOut();
   }
-
 }

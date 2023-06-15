@@ -7,6 +7,9 @@ import { EventService } from '../services/event.service';
 import { Event } from '../models/event';
 import { JoinEvent } from '../models/JoinEvent';
 import { JoinEventDTO } from '../models/DTO/JoinEventDTO';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
+import { ThemeserviceService } from 'src/app/services/themeservice.service';
+import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/view-user.service';
 
 @Component({
   selector: 'app-join-edit',
@@ -16,7 +19,7 @@ import { JoinEventDTO } from '../models/DTO/JoinEventDTO';
 
 export class JoinEditComponent implements OnInit {
 
-  currentUser: String;
+  currentUser: string;
   logInStatus: Boolean;
 
   private getJoinUrl: string;
@@ -31,16 +34,16 @@ export class JoinEditComponent implements OnInit {
   //get joined form
   joinedEvents: JoinEvent [] = [];
   join: JoinEvent;
+  joinLoading: boolean;
   
-  
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute, private eventService: EventService) { 
+  constructor(private themeservice: ThemeserviceService, private authorize: AuthorizeService, private activeUserService: ViewUserService,private http: HttpClient, private router: Router, private route: ActivatedRoute, private eventService: EventService) { 
 
     this.logInStatus = false;
 
    
-    this.getJoinUrl = 'http://localhost:8080/join/join/'
-    this.updateJoinUrl = 'http://localhost:8080/join/edit/join';
-    this.deleteJoinUrl = 'http://localhost:8080/join/edit/delete';
+    this.getJoinUrl = 'https://rallybackendtesting-production.up.railway.app/join/join/'
+    this.updateJoinUrl = 'https://rallybackendtesting-production.up.railway.app/join/edit/join';
+    this.deleteJoinUrl = 'https://rallybackendtesting-production.up.railway.app/join/edit/delete';
  
     this.id = this.route.snapshot.params['id'];
     this.event;
@@ -53,9 +56,17 @@ export class JoinEditComponent implements OnInit {
 
   ngOnInit(): void {
 
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
+  else {
+    this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
+    .subscribe((data: any) => {
+      this.currentUser = data.viewUser.userName
+      this.getJoin();
 
-    this.verifyLoggedIn();
-   
+    })
+  }
 
     console.log(this.id);
 
@@ -72,8 +83,7 @@ export class JoinEditComponent implements OnInit {
       console.log(response);
       this.joinedEvents = response;
 
-      this.getJoin();
-  
+    
      
     })
 
@@ -83,7 +93,7 @@ export class JoinEditComponent implements OnInit {
   //find which join object to populate edit join form
   getJoin() {
     for(let i = 0; i < this.joinedEvents.length; i++) { 
-      if(this.joinedEvents[i].userName === localStorage.getItem('userName') && this.joinedEvents[i].event.id === this.event.id) {
+      if(this.joinedEvents[i].userName === this.currentUser && this.joinedEvents[i].event.id === this.event.id) {
         this.join = this.joinedEvents[i];
         console.log(this.join);
       }
@@ -98,7 +108,7 @@ export class JoinEditComponent implements OnInit {
 
     let updateJoin: JoinEventDTO = {
     id: this.join.id,
-    userName: localStorage.getItem("userName"),
+    userName: this.currentUser,
     event: this.event,
     attending: joinEventInformation.value.attending,
     contactEmail: joinEventInformation.value.contactEmail,
@@ -136,21 +146,10 @@ export class JoinEditComponent implements OnInit {
    
   }
 
-  verifyLoggedIn() {
 
-    if (localStorage.getItem('userName') != null) {
-      this.currentUser = localStorage.getItem('userName');
-      this.logInStatus = true;
-    }
-
-  
-  }
 
   logOut() {
-    // localStorage.clear();
-    localStorage.removeItem('userName');
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
 

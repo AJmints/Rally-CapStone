@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ServiceDTO } from '../models/Service';
 import { Name } from '../models/Service';
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
 
 @Component({
   selector: 'app-offer',
@@ -12,18 +13,22 @@ import { Name } from '../models/Service';
 })
 export class OfferComponent implements OnInit {
 
+  private hostUrl = 'http://localhost:8080'
+
   private userUrl: string;
   currentUser;
   logInStatus: Boolean;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private authorize: AuthorizeService,private http: HttpClient, private router: Router) {
     this.logInStatus = false;
-    this.userUrl = 'http://localhost:8080/services/offer';
+    this.userUrl = this.hostUrl + '/services/offer';
    }
 
   ngOnInit(): void {
-
-    this.verifyLoggedIn();
+  
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
     
   }
 
@@ -37,11 +42,8 @@ export class OfferComponent implements OnInit {
   }
 
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
-
   // Validations
   types = ["Offering", "Requesting"];
   typeModel = {type: this.types[0]};
@@ -77,14 +79,14 @@ export class OfferComponent implements OnInit {
     
     
     this.http.post(this.userUrl, submitService).subscribe((res) => {
-      console.log(submitService.userName);
-      console.log(submitService.type);
-      console.log(submitService.service);
-      console.log(submitService.category);
-      console.log(submitService.days);
-      console.log(submitService.time);
-      console.log(submitService.description);
-      console.log(submitService.email);
+      // console.log(submitService.userName);
+      // console.log(submitService.type);
+      // console.log(submitService.service);
+      // console.log(submitService.category);
+      // console.log(submitService.days);
+      // console.log(submitService.time);
+      // console.log(submitService.description);
+      // console.log(submitService.email);
 
     })
 

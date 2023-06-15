@@ -1,37 +1,40 @@
 <div class="marginResetting">
     <div *ngIf="!darktheme; else darkSections">
-    <header style="position: relative;">
-        <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
-                <div class="container">
-                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
-                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
-                </a>
-                <div class="centering" id="navbarSupportedContent">
-                    <div style="text-align: center;" >
-                        <ul class="nav justify-content-end">
-                        <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="blackcolor">EVENTS</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="blackcolor">FORUMS</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="blackcolor">EATS</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="blackcolor">SERVICES</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="blackcolor">RESOURCES</span></a></li>
-                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="blackcolor">MY PROFILE</span></a></li>
-                        </ul>
-                    </div> 
-                </div>
+        <header>
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+                    <div class="container">
+                    <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                        <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                    </a>
+                    <div class="navbar-collapse" id="navbarSupportedContent">
+                        <div class="container">
+                            <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                            <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                            </ul>
+                        </div>    
+        
+                        <div *ngIf="!loginLoading">
+                            <div *ngIf="logInStatus; else notLoggedIn">
+                                <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                            </div>
+            
+                                <ng-template #notLoggedIn>
+                                    <button (click)="redirectToLogIn()" class="logInButton">LOG IN</button>
+                                </ng-template>
+                            </div>
+        
+                    </div>
+                    </div>
+                </nav>
             </div>
-                <div *ngIf="!loginLoading">
-                    <div *ngIf="logInStatus; else notLoggedIn">
-                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                    </div>
-    
-                        <ng-template #notLoggedIn>
-                            <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                        </ng-template>
-                    </div>
-            </nav>
-        </div>
-      </header>
+          </header>
+        
       <body>
 
         <div class="container">
@@ -114,14 +117,22 @@
     
                     <div class="card">
                         <br>
-                        <div *ngIf="logInStatus">
-                        <h5 class="card-title" style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px;">Hi, {{currentUser}} </h5>
-                            
-                            <div  style="padding: 15px;">
-                                <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
+                        <div *ngIf="!loginLoading; else pleaseWait">
+                            <div *ngIf="logInStatus">
+                            <h5 class="card-title" style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px; color: black;">Hi, {{currentUser}} </h5>
+                                
+                            <div *ngIf="dbImage; else default" style="padding: 15px;">
+                                <img [src]="dbImage"  width="100%" height="auto">
                             </div>
                         </div>
-                        
+                        <ng-template #default>
+                            <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
+                        </ng-template>
+                    </div>
+                    <ng-template #pleaseWait>
+                        <h5 class="card-title" style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px; color: Black;">Loading.... please wait</h5>
+                    </ng-template>
+                                <!-- User profile picture -->
                         <form #searchAttempt="ngForm" (ngSubmit)="Search(searchAttempt)">
                             <div style="margin-left: 15px; margin-right: 15px;">
                                 <input class="form-control form-control-lg" type="text" placeholder="find posts" name="description" required ngModel>
@@ -150,35 +161,36 @@
     </body>
 </div>    
 <ng-template #darkSections>
-    <header class="blackbody" style="position: relative;">
+    <header class="blackbody">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgb(0, 0, 0); border-bottom: 1px solid #fffdfd; padding: 15px;">
                 <div class="container">
                 <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
                     <img src="/assets/home-assets/rally_logo.png" alt="" height="75" width="80">
                 </a>
-                <div class="centering" id="navbarSupportedContent">
-                    <div style="text-align: center;" >
-                        <ul class="nav justify-content-end">
+                <div class="navbar-collapse" id="navbarSupportedContent">
+                    <div class="container">
+                        <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
                             <li class="nav-item"><a class="nav-link"  routerLink="/events" routerLinkActive="active"><span class="beigecolor">EVENTS</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active"><span class="beigecolor">FORUMS</span></a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="beigecolor">EATS</span></a></li>
+                            <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active"><span class="beigecolor">EATS</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active"><span class="beigecolor">SERVICES</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active"><span class="beigecolor">RESOURCES</span></a></li>
                             <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active"><span class="beigecolor">MY PROFILE</span></a></li>
                         </ul>
                     </div> 
+                
+            </div>
+            <div *ngIf="!loginLoading">
+                <div *ngIf="logInStatus; else notLoggedIn">
+                    <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                </div>
+
+                    <ng-template #notLoggedIn>
+                        <button (click)="redirectToLogIn()" class="logInButton">LOG IN</button>
+                    </ng-template>
                 </div>
             </div>
-                <div *ngIf="!loginLoading">
-                    <div *ngIf="logInStatus; else notLoggedIn">
-                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                    </div>
-    
-                        <ng-template #notLoggedIn>
-                            <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                        </ng-template>
-                    </div>
             </nav>
         </div>
       </header>
@@ -265,13 +277,21 @@
                     <div  class="card">
                         <div class="blackbody">
                         <br>
+                        <div *ngIf="!loginLoading; else pleaseWait">
                         <div *ngIf="logInStatus">
                         <h5 class="card-title" style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px; color: beige;">Hi, {{currentUser}} </h5>
                             
-                            <div  style="padding: 15px;">
-                                <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
-                            </div>
+                        <div *ngIf="dbImage; else default" style="padding: 15px;">
+                            <img [src]="dbImage"  width="100%" height="auto">
                         </div>
+                    </div>
+                    <ng-template #default>
+                        <img src="/assets/user-profile-assets/profile-pic.gif" width="100%" height="auto">
+                    </ng-template>
+                </div>
+                <ng-template #pleaseWait>
+                    <h5 class="card-title" style="font-family: 'Open Sans', sans-serif; font-size: 30px; font-weight: 700; text-align: center; padding: 7px; color: beige;">Loading.... please wait</h5>
+                </ng-template>
                     
                         <form #searchAttempt="ngForm" (ngSubmit)="Search(searchAttempt)">
                             <div style="margin-left: 15px; margin-right: 15px;">

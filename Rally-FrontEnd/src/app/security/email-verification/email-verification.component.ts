@@ -57,4 +57,8 @@ export class EmailVerificationComponent implements OnInit {
     this.authorize.logOut();
   }
 
+  redirectToLogIn(){
+    this.router.navigate(["/login"]);
+  }
+
 }

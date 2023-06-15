@@ -5,6 +5,7 @@ import { ViewService } from '../models/ServiceGet';
 import { Service } from '../models/Search';
 import { QueryList, ViewChildren } from '@angular/core';
 import { SortableHeaderDirective, SortEvent, compare } from '../models/Sortable'
+import { AuthorizeService } from 'src/app/security/security-service/authorize.service';
 
 
 @Component({
@@ -21,13 +22,14 @@ export class SearchComponent implements OnInit {
   servicesList: Service[];
   filter: string;
 
-  constructor(private http: HttpClient, private router: Router, private findService: ViewService) {
+  constructor(private authorize: AuthorizeService,private http: HttpClient, private router: Router, private findService: ViewService) {
     this.logInStatus = false;
    }
 
   ngOnInit(): void {
-
-    this.verifyLoggedIn();
+    if (this.authorize.isloggedIn() === false){
+      this.router.navigate(['/login'])
+  }
     this.findService.getService().subscribe((response: Service[]) => {
       this.servicesList = response;
       this.data = response;
@@ -46,9 +48,7 @@ export class SearchComponent implements OnInit {
   }
 
   logOut() {
-    localStorage.clear();
-    console.log(localStorage.getItem('userName'))
-    this.logInStatus = false;
+    this.authorize.logOut()
   }
 
   @ViewChildren(SortableHeaderDirective)

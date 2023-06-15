@@ -15,6 +15,9 @@ import { ViewUserService } from 'src/app/user-profile-arm/user-profile/services/
   styleUrls: ['./view-post.component.css']
 })
 export class ViewPostComponent implements OnInit {
+
+  private hostUrl = 'http://localhost:8080'
+
   postId: number;
   postObject: ForumPost;
   currentUser: string;
@@ -80,7 +83,7 @@ export class ViewPostComponent implements OnInit {
     }
   }
   getPost(){    
-    this.http.get('http://localhost:8080/viewPost/' + this.postId).subscribe((post: ForumPost)=> {
+    this.http.get( this.hostUrl + '/viewPost/' + this.postId).subscribe((post: ForumPost)=> {
         if(post != null){
           this.postObject = post;
           this.isLoading = false;
@@ -92,7 +95,7 @@ export class ViewPostComponent implements OnInit {
   }
   getReplies(){
     this.replies = [];
-    this.http.get('http://localhost:8080/Replies').subscribe((res)=> {
+    this.http.get( this.hostUrl + '/Replies').subscribe((res)=> {
         for(const k in res){
           if(res[k].forumPosts.id == this.postId){
             this.replies.push(res[k])
@@ -104,7 +107,7 @@ export class ViewPostComponent implements OnInit {
     let parent = document.getElementById("parent" + idString);
     let child = document.getElementById(idString);
     parent.removeChild(child);
-    this.http.post('http://localhost:8080/DeleteReply', +idString).subscribe((res) => {
+    this.http.post( this.hostUrl + '/DeleteReply', +idString).subscribe((res) => {
       console.log(res);
     })
   }
@@ -120,7 +123,7 @@ export class ViewPostComponent implements OnInit {
         username: this.currentUser,
         id: this.postId
       }
-      this.http.post(`http://localhost:8080/Replies`, replyDetails).subscribe((res) => {
+      this.http.post( this.hostUrl + `/Replies`, replyDetails).subscribe((res) => {
     this.getPost();
     });
   }
@@ -153,7 +156,7 @@ export class ViewPostComponent implements OnInit {
         id: this.editReplyDescription1
     }
     console.log(newReplyDescription.description)
-    this.http.post(`http://localhost:8080/UpdateReply`, newReplyDescription).subscribe((res) => {
+    this.http.post( this.hostUrl + `/UpdateReply`, newReplyDescription).subscribe((res) => {
     console.log(res)
     this.editAndDeleteButtons = true;
     this.updateDescription = false;
@@ -183,7 +186,7 @@ export class ViewPostComponent implements OnInit {
         id: this.postObject.id
       }
       console.log(newPostDescription)
-      this.http.post(`http://localhost:8080/UpdatePost`, newPostDescription).subscribe((res) => {
+      this.http.post( this.hostUrl + `/UpdatePost`, newPostDescription).subscribe((res) => {
         console.log(res)
         this.postEditAndDeleteButtons = true;
         this.updatePostDescription = false;
@@ -191,7 +194,7 @@ export class ViewPostComponent implements OnInit {
     }
   }
   deletePost(idString){
-    this.http.post('http://localhost:8080/DeletePost', +idString).subscribe((res) => {
+    this.http.post( this.hostUrl + '/DeletePost', +idString).subscribe((res) => {
       console.log(res);
       this.router.navigate(["/forum/" + this.postObject.category.toLowerCase()]);
     })

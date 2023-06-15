@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
 })
 export class ResourceService {
 
-  private getResourceByIdUrl = 'http://localhost:8080/resources/resource/';
-  private updateResourceUrl = 'http://localhost:8080/resources/update/resource/';
+ private hostUrl = 'http://localhost:8080'   
+
+  private getResourceByIdUrl = this.hostUrl + '/resources/resource/';
+  private updateResourceUrl = this.hostUrl + '/resources/update/resource/';
   // private deleteEventByIdUrl = 'http://localhost:8080/resources/resource/';
   
 
@@ -26,7 +28,7 @@ export class ResourceService {
   }
 
   deleteResource(id: string) {
-    return this.http.post('http://localhost:8080/resources/resource', +id);
+    return this.http.post( this.hostUrl + '/resources/resource', +id);
     //is this right?
   }
 

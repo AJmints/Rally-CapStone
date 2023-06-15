@@ -6,141 +6,137 @@
         <title>event-edit</title>
       </head> -->
 
-        <header>
-            <div class="container-fluid">
-                <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+      <header>
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color: white; border-bottom: 1px solid #000; padding: 15px;">
+                <div class="container">
+                <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
+                    <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
+                </a>
+                <div class="navbar-collapse" id="navbarSupportedContent">
                     <div class="container">
-                    <a class="navbar-brand" routerLink="/home" routerLinkActive="active" href="#">
-                        <img src="/assets/home-assets/rally_logo2.jpg" alt="" height="75" width="80">
-                    </a>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <div class="container">
-                            <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
-                            <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">EATS</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
-                            <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
-                            </ul>
-                        </div>    
-                        
-                        <div *ngIf="logInStatus; else notLoggedIn">
-                            <button class="logOutButton" (click)="logOut()">LOG OUT</button>
-                        </div>
-        
-                            <ng-template #notLoggedIn>
-                                <a routerLink="/login" routerLinkActive="active" class="logInButton">LOG IN</a>
-                            </ng-template>
-                    </div>
-                    </div>
-                </nav>
-            </div>
-          </header>
+                        <ul class="nav justify-content-end" style="margin-right: 50px; font-family: 'Open Sans', sans-serif;">
+                        <li class="nav-item"><a class="nav-link" routerLink="/events" routerLinkActive="active">EVENTS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/forum" routerLinkActive="active">FORUMS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/restaurants" routerLinkActive="active">EATS</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/services" routerLinkActive="active">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/resources" routerLinkActive="active">RESOURCES</a></li>
+                        <li class="nav-item"><a class="nav-link" routerLink="/myProfile" routerLinkActive="active">MY PROFILE</a></li>
+                        </ul>
+                    </div>    
+                    
+                  
+                        <button class="logOutButton" (click)="logOut()">LOG OUT</button>
+                   
+                </div>
+                </div>
+            </nav>
+        </div>
+      </header>
 
 
 <body style="margin-top: 120px;">
-    <div class="container">
+<div class="container">
 
-      
-            <div id="list_head">
-                    <p>Update:  {{event.eventTitle}}</p> 
-            </div>
-        
-            <br>
-            <br>
-                 
-                <form #eventInformation="ngForm" (ngSubmit)="updateEvent(eventInformation)">
-
-                    <div class="row">
-                        <div class="col-5">
-                            
-                            <input type="hidden" id="id" name="eventId" value="event.id" ngModel>
-
-                            <label class="form-label">host</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventHost" id="host" name="eventHost" ngModel>
-                            <br>
-            
-                                
-                            <label class="form-label">email</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.contactEmail" id="email" name="contactEmail" ngModel>
-        
-            
-                            <br>
-                            <label class="form-label">event title</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventTitle" id="title" name="eventTitle" ngModel>
-                            <br>
-            
-            
-                            <label class="form-label">date & time</label><br>
-                            <input class="form-control form-control-lg" type="datetime-local" required [(ngModel)]="event.datetime" id="datetime" name="datetime" ngModel>
-                            <br>
-            
-            
-                            <label class="form-label">address</label><br>
-                            <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventAddress" id="address" name="eventAddress" ngModel>
-                            <br>
-            
-               
-                            <label class="form-label">category</label>
-                            <hr style="width:530px; margin-top:0;">
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="eventCategory" value="connect" required [(ngModel)]="event.eventCategory" ngModel>
-                                <label class="form-check-label" for="eventCategory">connect</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="eventCategory" value="volunteer" required [(ngModel)]="event.eventCategory" ngModel>
-                                <label class="form-check-label" for="eventCategory">volunteer</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="eventCategory" value="learn" required [(ngModel)]="event.eventCategory" ngModel>
-                                <label class="form-check-label" for="eventCategory">learn</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="eventCategory" value="donate" required [(ngModel)]="event.eventCategory" ngModel>
-                                <label class="form-check-label" for="eventCategory">donate</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="eventCategory" value="celebrate" required [(ngModel)]="event.eventCategory" ngModel>
-                                <label class="form-check-label" for="eventCategory">celebrate</label>
-                            </div>
-                              
-
-                        </div>
-
-                        <div class="col-2"></div>
-
-                        <div class="col-5">
-                            <label class="form-label">description</label><br>
-                            <textarea class="form-control" rows="9" required [(ngModel)]="event.description" id=description name="description" ngModel></textarea>
-                            <br>
-                            <br>
-                            <br>
-                           
-                            <button [disabled]="eventInformation.invalid" type="submit" id="edit_btn">UPDATE</button>
-                            <br>
-                                <div *ngIf="eventInformation.invalid && eventInformation.touched" class="alert alert-danger">
-                                    Make sure you've filled out the whole form!
-                                </div>
-            
-                        </div>
-                    </div>
- 
-                </form>
+  
+        <div id="list_head">
+                <p>Update:  {{event.eventTitle}}</p> 
+        </div>
+    
+        <br>
+        <br>
+             
+            <form #eventInformation="ngForm" (ngSubmit)="updateEvent(eventInformation)">
 
                 <div class="row">
-
-                    <div class="col-7"></div>
-
                     <div class="col-5">
+                        
+                        <input type="hidden" id="id" name="eventId" value="event.id" ngModel>
 
-                        <button type="button" (click)="deleteEvent()" id="edit_btn" style="background-color: #C03E24; float: right; margin-top: -155px; margin-right: -5px;">DELETE</button>
+                        <label class="form-label">host</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventHost" id="host" name="eventHost" ngModel>
+                        <br>
+        
+                            
+                        <label class="form-label">email</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.contactEmail" id="email" name="contactEmail" ngModel>
+    
+        
+                        <br>
+                        <label class="form-label">event title</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventTitle" id="title" name="eventTitle" ngModel>
+                        <br>
+        
+        
+                        <label class="form-label">date & time</label><br>
+                        <input class="form-control form-control-lg" type="datetime-local" required [(ngModel)]="event.datetime" id="datetime" name="datetime" ngModel>
+                        <br>
+        
+        
+                        <label class="form-label">address</label><br>
+                        <input class="form-control form-control-lg" type="text" required [(ngModel)]="event.eventAddress" id="address" name="eventAddress" ngModel>
+                        <br>
+        
+           
+                        <label class="form-label">category</label>
+                        <hr style="width:530px; margin-top:0;">
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="eventCategory" value="connect" required [(ngModel)]="event.eventCategory" ngModel>
+                            <label class="form-check-label" for="eventCategory">connect</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="eventCategory" value="volunteer" required [(ngModel)]="event.eventCategory" ngModel>
+                            <label class="form-check-label" for="eventCategory">volunteer</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="eventCategory" value="learn" required [(ngModel)]="event.eventCategory" ngModel>
+                            <label class="form-check-label" for="eventCategory">learn</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="eventCategory" value="donate" required [(ngModel)]="event.eventCategory" ngModel>
+                            <label class="form-check-label" for="eventCategory">donate</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="eventCategory" value="celebrate" required [(ngModel)]="event.eventCategory" ngModel>
+                            <label class="form-check-label" for="eventCategory">celebrate</label>
+                        </div>
+                          
+
                     </div>
 
+                    <div class="col-2"></div>
+
+                    <div class="col-5">
+                        <label class="form-label">description</label><br>
+                        <textarea class="form-control" rows="9" required [(ngModel)]="event.description" id=description name="description" ngModel></textarea>
+                        <br>
+                        <br>
+                        <br>
+                       
+                        <button [disabled]="eventInformation.invalid" type="submit" id="edit_btn">UPDATE</button>
+                        <br>
+                            <div *ngIf="eventInformation.invalid && eventInformation.touched" class="alert alert-danger">
+                                Make sure you've filled out the whole form!
+                            </div>
+        
+                    </div>
                 </div>
 
-    </div>
+            </form>
+
+            <div class="row">
+
+                <div class="col-7"></div>
+
+                <div class="col-5">
+
+                    <button type="button" (click)="deleteEvent()" id="edit_btn" style="background-color: #C03E24; float: right; margin-top: -155px; margin-right: -5px;">DELETE</button>
+                </div>
+
+            </div>
+
+</div>
 </body>
 <!-- </html> -->
 
