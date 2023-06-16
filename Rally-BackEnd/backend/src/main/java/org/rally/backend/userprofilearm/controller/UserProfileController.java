@@ -14,6 +14,7 @@ import org.rally.backend.springsecurity.security.jwt.JWTGenerator;
 import org.rally.backend.userprofilearm.exception.MinimumCharacterException;
 import org.rally.backend.userprofilearm.model.*;
 import org.rally.backend.userprofilearm.model.dto.DirectMessageDTO;
+import org.rally.backend.userprofilearm.model.dto.FavoritesPostsDTO;
 import org.rally.backend.userprofilearm.model.dto.HidePostDTO;
 import org.rally.backend.userprofilearm.model.dto.UserInfoDTO;
 import org.rally.backend.userprofilearm.model.response.ResponseMessage;
@@ -44,6 +45,7 @@ public class UserProfileController {
     private final ForumPostRepository forumPostRepository;
     private final RepliesRepository repliesRepository;
     private final HiddenPostRepository hiddenPostRepository;
+    private final FavoritesRepository favoritesRepository;
     private final ServiceRepository serviceRepository;
     private final EventRepository eventRepository;
     private final JWTBlockListRepository jwtBlockListRepository;
@@ -57,7 +59,7 @@ public class UserProfileController {
                                  ForumPostRepository forumPostRepository, RepliesRepository repliesRepository,
                                  HiddenPostRepository hiddenPostRepository, ServiceRepository serviceRepository,
                                  EventRepository eventRepository, JWTGenerator jwtGenerator,
-                                 JWTBlockListRepository jwtBlockListRepository) {
+                                 JWTBlockListRepository jwtBlockListRepository, FavoritesRepository favoritesRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userInformationRepository = userInformationRepository;
@@ -66,6 +68,7 @@ public class UserProfileController {
         this.forumPostRepository = forumPostRepository;
         this.repliesRepository = repliesRepository;
         this.hiddenPostRepository = hiddenPostRepository;
+        this.favoritesRepository = favoritesRepository;
         this.serviceRepository = serviceRepository;
         this.eventRepository = eventRepository;
         this.jwtGenerator = jwtGenerator;
@@ -251,6 +254,16 @@ public class UserProfileController {
                 .image(ImageUtility.compressImage(file.getBytes())).build());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseMessage("Image uploaded successfully: " + file.getOriginalFilename()));
+    }
+
+    @PostMapping("/addToFavorites")
+    public ResponseEntity<?> addToFavorites(@RequestBody FavoritesPostsDTO favoritesPostsDTO) {
+
+        FavoritePosts addPost = new FavoritePosts(favoritesPostsDTO.getPostType(), favoritesPostsDTO.getPostId(), favoritesPostsDTO.getUserName());
+
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/hidePostList")

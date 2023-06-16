@@ -27,6 +27,7 @@ export class CommunityHomeComponent implements OnInit {
   loginLoading: boolean;
   dbImage: any;
   postResponse: any;
+  message = '';
   constructor(private http: HttpClient, private router: Router,  private authorize: AuthorizeService, private themeservice: ThemeserviceService, private activeUserService: ViewUserService) {
     this.logInStatus = false;
     this.createPostBoolean = false;
@@ -82,6 +83,13 @@ export class CommunityHomeComponent implements OnInit {
   createPostButton(){
       this.createPostBoolean = true;
   }
+  
+
+  addToFavorites(forumPost) {
+    // console.log(forumPost.target.name)
+    this.activeUserService.saveToFavorites(forumPost.target.name, "ForumPost");
+  }
+
 
   createPost(postInformation: NgForm){
       this.createPostBoolean = false;

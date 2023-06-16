@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ViewUserBundle } from '../../models/ViewUserBundle';
+import { StorageService } from 'src/app/security/security-service/storage-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class ViewUserService {
 
   private postDirectMessageToViewedUser = this.hostUrl + '/user/sendDirectMessage';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private storage: StorageService) { }
 
   /* Get Request */
   /* Get Request */
@@ -46,8 +47,26 @@ export class ViewUserService {
   /* Service methods */
   /* Service methods */
 
+  saveToFavorites(postId, type) {
+    let postPresent = false;
+    let addFavItem = {
+      userName: this.storage.getUserName(),
+      postId: postId,
+      postType: type
+    };
+    //return a message of post status (saved or removed)
+
+    this.http.post( this.hostUrl + '/addToFavorites', addFavItem).subscribe((data: any) => {
+      console.log(data)
+    });
+    console.log(type)
+
+
+    return "Post saved to favorites!"
+  }
+
   redirectWhenViewingSelf(userName) {
-    if (localStorage.getItem('userName') === userName) {
+    if (this.storage.getUserName() === userName) {
       this.router.navigate(["/myProfile"])
       return;
     }
