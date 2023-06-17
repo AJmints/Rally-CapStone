@@ -154,20 +154,25 @@ public class UserProfileController {
         UserDmHistory targetDirectMessages = UserProfileControllerService.activeUserDirectMessageHistory(targetUser.getId());
         UserPostHistory targetUserPostHistory = new UserPostHistory();
 
+        /** Retrieve a list of HiddenPost - Posts that are flagged as hidden and set in UserPostHistory Obj **/
         List<HiddenPost> targetHiddenPost = UserProfileControllerService.getHiddenPostListForUserBundleMain(targetUser.getId());
         targetUserPostHistory.setViewUserHiddenPost(targetHiddenPost);
+        /** Retrieve Forum Posts and set in UserPostHistory Obj **/
         List<ForumPosts> targetForumPost = UserProfileControllerService.getUserForumPost(targetUser.getId());
         targetUserPostHistory.setViewUserForumPost(targetForumPost);
+        /** Retrieve Forum Replies and set in UserPostHistory Obj **/
         List<Replies> targetForumReplies = UserProfileControllerService.getUserReplies(targetUser.getId());
         targetUserPostHistory.setViewUserForumReplies(targetForumReplies);
-        /** Events need username, userid, or UserEntity inside model **/
+        /** Retrieve Event Post and set in UserPostHistory Obj **/
         List<Event> targetEventPost = UserProfileControllerService.getUserEventPost(targetUser.getUserName());
         targetUserPostHistory.setViewUserEventPost(targetEventPost);
-
         /** Retrieve Service Post and set in UserPostHistory Obj **/
         List<Service> targetServicePost = UserProfileControllerService.getUserServicePost(targetUser.getUserName());
         targetUserPostHistory.setViewUserServicePost(targetServicePost);
-        /** Resources, RestaurantReview need username, userid, or UserEntity inside model **/
+        /** Retrieve Favorite Forum Post and set in UserPostHistory Obj **/
+        List<ForumPosts> favoritePosts = UserProfileControllerService.getFavoritePosts(targetUser.getUserName());
+        targetUserPostHistory.setViewUserFavoritePost(favoritePosts);
+        /** Resources and RestaurantReview need username, userid, or UserEntity inside model **/
 
         return new ResponseEntity<>(new UserBundle(targetUser, targetInformation, targetDirectMessages, targetUserPostHistory), HttpStatus.OK);
     }
@@ -259,11 +264,18 @@ public class UserProfileController {
     @PostMapping("/addToFavorites")
     public ResponseEntity<?> addToFavorites(@RequestBody FavoritesPostsDTO favoritesPostsDTO) {
 
+        for (FavoritePosts post : favoritesRepository.findAll()) {
+            if (Objects.equals(favoritesPostsDTO.getPostType(), post.getPostType()) && Objects.equals(favoritesPostsDTO.getPostId(), post.getPostId()) && Objects.equals(favoritesPostsDTO.getUserName(), post.getUserName())) {
+                ResponseMessage responseMessage = new ResponseMessage("Post removed from favorites");
+                favoritesRepository.delete(post);
+                return new ResponseEntity<>(responseMessage, HttpStatus.OK);
+            }
+        }
+
         FavoritePosts addPost = new FavoritePosts(favoritesPostsDTO.getPostType(), favoritesPostsDTO.getPostId(), favoritesPostsDTO.getUserName());
-
-
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        ResponseMessage responseMessage = new ResponseMessage("Post added to favorites!");
+        favoritesRepository.save(addPost);
+        return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
     @PostMapping("/hidePostList")

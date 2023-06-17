@@ -11,7 +11,7 @@ import java.util.List;
 public class UserPostHistory {
 
     List<HiddenPost> viewUserHiddenPost;
-    // List<Favorites> viewUserFavoritePost;
+    List<ForumPosts> viewUserFavoritePost;
     List<ForumPosts> viewUserForumPost;
     List<Replies> viewUserForumReplies;
     List<Event> viewUserEventPost;
@@ -22,6 +22,14 @@ public class UserPostHistory {
 
 
     public UserPostHistory() {
+    }
+
+    public List<ForumPosts> getViewUserFavoritePost() {
+        return viewUserFavoritePost;
+    }
+
+    public void setViewUserFavoritePost(List<ForumPosts> viewUserFavoritePost) {
+        this.viewUserFavoritePost = viewUserFavoritePost;
     }
 
     public List<Resource> getViewUserResourcePost() {

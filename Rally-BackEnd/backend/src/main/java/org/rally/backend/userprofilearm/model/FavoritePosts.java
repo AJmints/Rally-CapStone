@@ -21,19 +21,38 @@ public class FavoritePosts {
         this.userName = userName;
     }
 
+    public FavoritePosts() {
+    }
+
     public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getPostType() {
         return postType;
     }
 
+    public void setPostType(String postType) {
+        this.postType = postType;
+    }
+
     public Integer getPostId() {
         return postId;
     }
 
+    public void setPostId(Integer postId) {
+        this.postId = postId;
+    }
+
     public String getUserName() {
         return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -91,8 +91,15 @@
 
 
                                             <div style="text-align: right; color: #fffdfd;" class="row g-0">
-                                                <p *ngIf="this.message !== ''">{{this.message}}</p>
-                                                <label class="form-check-label" style="font-size: 15px;"><h3>Favorite</h3><input class="form-check-input" type="checkbox" name="{{test.id}}" (change)="addToFavorites($event)"></label>
+                                                
+                                                <label class="form-check-label" style="font-size: 15px;">
+                                                    <h3 *ngIf="test.favorite">Remove from favorite?</h3>
+                                                    <h3 *ngIf="!test.favorite">Add to Favorite?</h3>
+                                                    <input class="form-check-input" type="checkbox" name="{{test.id}}" (change)="addToFavorites($event)">
+                                                </label>
+                                            </div>
+                                            <div  *ngIf="this.messagebol">
+                                            <h3 style="color: #fffdfd;">{{this.message}}</h3>
                                             </div>
 
 

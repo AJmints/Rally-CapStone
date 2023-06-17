@@ -86,7 +86,7 @@ public class AuthenticationController {
         }
         if (userRepository.existsByUserEmail(existingEmail)) {
             ResponseMessage authenticationFailure = new ResponseMessage("Error: Email is already in use");
-            return ResponseEntity.badRequest().body("Error: Email is already in use");
+            return new ResponseEntity<>(authenticationFailure, HttpStatus.OK);
         }
 
         String password = userBundleDTO.getRegisterDTO().getPassword();

@@ -26,10 +26,9 @@
   </header>
 
 
-<!-- <div class="container"> -->
-<!-- First Row in User Profile -->
-<!-- First Row in User Profile -->
-<!-- First Row in User Profile -->
+<!-- First Row in User Profile/Search Bar -->
+<!-- First Row in User Profile/Search Bar -->
+<!-- First Row in User Profile/Search Bar -->
 <body >
     <div class="container">
         <div class="row">
@@ -86,7 +85,9 @@
 
 
 <!-- User Information -->
-    <br>
+<!-- User Information -->
+<!-- User Information -->
+<br>
     <div>
         <div *ngIf="changeInfo; else changeForm"> 
         <!-- Display user Information -->
@@ -234,16 +235,22 @@
     </div>
 
 
-    <!-- User Profile Favorite Section -->
-    <!-- User Profile Favorite Section -->
-    <!-- User Profile Favorite Section -->
-    <br>
+<!-- User Profile Favorite Section -->
+<!-- User Profile Favorite Section -->
+<!-- User Profile Favorite Section -->
+<br>
     <div>
         <h2>Favorites</h2>
     <div class="card">
         <div class="scroll-favorites">
-
+        <div *ngFor="let post of this?.favoritePost">
+            <div class="card">
+                <div class="card" style="background-color: #F9A605"><h6>ForumPost: {{ post.category }}</h6></div>
+                <h1><a routerLink='/forum/post/{{post.id}}' routerLinkActive="active" id="link">{{ post.title }}</a></h1>
+                <h4 style="font-size: 15px; font-weight: normal;">{{ post.description }}</h4>
+            </div>
         </div>
+    </div>
     </div>
     </div>
 </div>
@@ -362,4 +369,9 @@
 <!-- End of First row in User Profile -->
 </div>
 </div>
+<br><br><br>
 </body>
+
+<footer>
+    
+</footer>

@@ -16,6 +16,8 @@ public class ForumPosts extends AbstractEntity{
     @OneToOne(cascade = CascadeType.PERSIST)
     private ForumPostLike forumPostLike;
 
+    private Boolean favorite;
+
     private String title;
     private String description;
     private String category;
@@ -25,6 +27,14 @@ public class ForumPosts extends AbstractEntity{
         this.category = category;
     }
     public ForumPosts(){}
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
 
     public void setForumPostLike(ForumPostLike forumPostLike) {
         this.forumPostLike = forumPostLike;

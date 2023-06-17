@@ -17,6 +17,9 @@ export class ViewUserService {
 
   private postDirectMessageToViewedUser = this.hostUrl + '/user/sendDirectMessage';
 
+  /* Service Response */
+  response; 
+
   constructor(private http: HttpClient, private router: Router, private storage: StorageService) { }
 
   /* Get Request */
@@ -47,6 +50,7 @@ export class ViewUserService {
   /* Service methods */
   /* Service methods */
 
+  
   saveToFavorites(postId, type) {
     let postPresent = false;
     let addFavItem = {
@@ -56,14 +60,15 @@ export class ViewUserService {
     };
     //return a message of post status (saved or removed)
 
-    this.http.post( this.hostUrl + '/addToFavorites', addFavItem).subscribe((data: any) => {
-      console.log(data)
+    this.http.post( this.hostUrl + '/user/addToFavorites', addFavItem).subscribe((data: any) => {
+      if (data.message === "Post removed from favorties") {
+        this.response = "Post removed from favorties"
+      } else if (data.message === "Post added to favorites!") {
+        this.response = "Post added to favorites!"
+      }
     });
-    console.log(type)
-
-
-    return "Post saved to favorites!"
   }
+
 
   redirectWhenViewingSelf(userName) {
     if (this.storage.getUserName() === userName) {

@@ -34,6 +34,7 @@ public class UserProfileControllerService {
     static HiddenPostRepository hiddenPostRepository;
     static ServiceRepository serviceRepository;
     static EventRepository eventRepository;
+    static FavoritesRepository favoritesRepository;
 
 
     @Autowired
@@ -46,7 +47,8 @@ public class UserProfileControllerService {
                                         RepliesRepository repliesRepository,
                                         HiddenPostRepository hiddenPostRepository,
                                         ServiceRepository serviceRepository,
-                                        EventRepository eventRepository) {
+                                        EventRepository eventRepository,
+                                        FavoritesRepository favoritesRepository) {
         UserProfileControllerService.userRepository = userRepository;
         UserProfileControllerService.roleRepository = roleRepository;
         UserProfileControllerService.userInformationRepository = userInformationRepository;
@@ -57,6 +59,7 @@ public class UserProfileControllerService {
         UserProfileControllerService.hiddenPostRepository = hiddenPostRepository;
         UserProfileControllerService.serviceRepository = serviceRepository;
         UserProfileControllerService.eventRepository = eventRepository;
+        UserProfileControllerService.favoritesRepository = favoritesRepository;
     }
 
     /** List that displays the users post history when viewing a different user profile
@@ -157,6 +160,17 @@ public class UserProfileControllerService {
             }
         }
         return hiddenPostList;
+    }
+
+    /** Returns a list of favorite forum post **/
+    public static List<ForumPosts> getFavoritePosts(String userName) {
+        List<ForumPosts> favoritePosts = new ArrayList<>();
+        for (FavoritePosts post : favoritesRepository.findAll()) {
+            if (Objects.equals(post.getUserName(), userName)) {
+                favoritePosts.add(forumPostRepository.findById(post.getPostId()).get());
+            }
+        }
+        return favoritePosts;
     }
 
     /** This method returns a lists of ForumPosts objects **/

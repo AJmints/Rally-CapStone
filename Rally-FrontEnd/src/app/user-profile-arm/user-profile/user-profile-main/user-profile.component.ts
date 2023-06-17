@@ -47,6 +47,7 @@ export class UserProfileComponent implements OnInit {
   forumReplies: any[];
   eventPost: Event[];
   servicePost: any[];
+  favoritePost: any[];
   
   /* HTML booleans */
   logInStatus: boolean = true;
@@ -87,7 +88,6 @@ export class UserProfileComponent implements OnInit {
       
       /* Get all information relevent to user */
       this.activeUserService.getMainUserBundleByUserName(this.storageService.getUserName()).subscribe((data: any) => {
-       
         this.userEntity = data.viewUser;
         this.userInformation = data.viewUserInformation;
         this.allDmHistory = data.viewUserDmHistory.directMessageList;
@@ -97,6 +97,8 @@ export class UserProfileComponent implements OnInit {
         this.forumReplies = data.viewUserPostHistory.viewUserForumReplies;
         this.eventPost = data.viewUserPostHistory.viewUserEventPost;      
         this.servicePost = data.viewUserPostHistory.viewUserServicePost;
+        this.favoritePost = data.viewUserPostHistory.viewUserFavoritePost;
+        console.log(this.favoritePost)
         this.model = new NgUserInformation(this.userInformation.firstName,
                                            this.userInformation.lastName,
                                            this.userInformation.neighborhood,

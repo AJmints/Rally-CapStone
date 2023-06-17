@@ -27,7 +27,9 @@ export class CommunityHomeComponent implements OnInit {
   loginLoading: boolean;
   dbImage: any;
   postResponse: any;
-  message = '';
+  message;
+  messagebol = false;
+  favPost: any;
   constructor(private http: HttpClient, private router: Router,  private authorize: AuthorizeService, private themeservice: ThemeserviceService, private activeUserService: ViewUserService) {
     this.logInStatus = false;
     this.createPostBoolean = false;
@@ -36,17 +38,32 @@ export class CommunityHomeComponent implements OnInit {
     this.newArray = [];
     this.forumTopic = "CommunityHome";
     this.loginLoading = true;
+
    }
   
   ngOnInit(): void {
     if (this.authorize.isloggedIn() === true) {
       
+      this.getPosts();
+
       /* Get all information relevent to user */
       this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
       .subscribe((data: any) => {
+        // console.log(data)
         this.logInStatus = true;
         this.currentUser = data.viewUser.userName
+        this.favPost = data.viewUserPostHistory.viewUserFavoritePost
         this.loginLoading = false;
+
+        for (let fav of this.favPost) {
+          for (let post of this.newArray) {
+            if (fav.id === post.id) {
+              console.log("true?")
+              post.favorite = true;
+            }
+          }
+        }
+        console.log(this.newArray)
       },  err => {
         if (err.status === 500) {
           this.logInStatus = false;
@@ -70,7 +87,7 @@ export class CommunityHomeComponent implements OnInit {
   }
 })
     this.checkTheme();
-    this.getPosts();
+    // this.getPosts();
   }
   checkTheme(){
       if (localStorage.getItem('theme') == 'dark'){
@@ -86,8 +103,32 @@ export class CommunityHomeComponent implements OnInit {
   
 
   addToFavorites(forumPost) {
-    // console.log(forumPost.target.name)
     this.activeUserService.saveToFavorites(forumPost.target.name, "ForumPost");
+    let update = this.newArray;
+    for (let post of this.newArray) {
+      if (post.id === Number(forumPost.target.name)) {
+        if (post.favorite === true) {
+          post.favorite = null
+          update = update.filter((post: any) => post.id !== Number(forumPost.target.name));
+          update.push(post)
+          this.newArray = [];
+          this.newArray = update;
+          return this.newArray.sort(function(b, a) {
+            return a.id - b.id
+          })
+        } else {
+          post.favorite = true
+          update = update.filter((post: any) => post.id !== Number(forumPost.target.name));
+          update.push(post)
+          this.newArray = [];
+          this.newArray = update;
+          return this.newArray.sort(function(b, a) {
+            return a.id - b.id
+          })
+        }
+      }
+    }
+    // this.getPosts();
   }
 
 
@@ -109,7 +150,7 @@ export class CommunityHomeComponent implements OnInit {
   getPosts(){
     this.themeservice.getForumTopicPosts(this.forumTopic).subscribe((posts) =>{
       this.newArray = this.themeservice.sortPosts(posts)
-      console.log(this.newArray)   
+      // console.log(this.newArray)   
     })
   }
   Light(){
