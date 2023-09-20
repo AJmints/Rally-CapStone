@@ -1,5 +1,18 @@
 # GroupJane
 
+## What you need to set up locally
+
+These are the versions you need to set the front end up:
+AngularCLI: version 12.2.18,
+Node: 14.15.1,
+NPM: 6.14.8,
+
+For the backend:
+Java: SDK 17,
+
+For DataBase:
+DB: MySQL,
+
 # Project Outline
 For this assignment, you will submit a high-level outline of your project. This can, and likely will, change over time. In particular, your mentor will provide direction and feedback to help sharpen your ideas. So don't worry if you feel unsure about some aspects of the outline or if you have to change some things later.
 
@@ -34,7 +47,6 @@ Bootstrap<br>
 Spring Security<br>
 HTTPS Requests (connecting front end to back end)<br>
 Using APIs<br>
-
 
 ### Project Tracker
 [Link to your Trello board here](https://trello.com/b/8aRo3aLi/liftoff-april23-scrumboard)

@@ -36,6 +36,8 @@ export class ForumTopic1Component implements OnInit {
   
   ngOnInit(): void {
     if (this.authorize.isloggedIn() === true) {
+
+      this.getPosts();
       
       /* Get all information relevent to user */
       this.activeUserService.getMainUserBundleByUserName(this.themeservice.getUserName())
@@ -58,7 +60,8 @@ export class ForumTopic1Component implements OnInit {
       this.loginLoading = false;
   }
     this.checkTheme();
-    this.getPosts();
+
+    
   }
   checkTheme(){
       if (localStorage.getItem('theme') == 'dark'){
@@ -67,6 +70,35 @@ export class ForumTopic1Component implements OnInit {
   }
   createPostButton(){
       this.createPostBoolean = true;
+  }
+
+  addToFavorites(forumPost) {
+    this.activeUserService.saveToFavorites(forumPost.target.name, "ForumPost");
+    let update = this.newArray;
+    for (let post of this.newArray) {
+      if (post.id === Number(forumPost.target.name)) {
+        if (post.favorite === true) {
+          post.favorite = null
+          update = update.filter((post: any) => post.id !== Number(forumPost.target.name));
+          update.push(post)
+          this.newArray = [];
+          this.newArray = update;
+          return this.newArray.sort(function(b, a) {
+            return a.id - b.id
+          })
+        } else {
+          post.favorite = true
+          update = update.filter((post: any) => post.id !== Number(forumPost.target.name));
+          update.push(post)
+          this.newArray = [];
+          this.newArray = update;
+          return this.newArray.sort(function(b, a) {
+            return a.id - b.id
+          })
+        }
+      }
+    }
+    // this.getPosts();
   }
   redirectToLogIn(){
     this.router.navigate(["/login"]);
